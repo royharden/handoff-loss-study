@@ -43,3 +43,84 @@ Classes: **K** keyless local check (no spend, needs an install), **D** Docker ch
 | DV-M2-12 | K | `JsonValueSchema` now rejects `-0` (M1 review note 4); recursive union with a refinement parses tool inputs as before | No vitest | `npx vitest run tests/core.test.ts` (case "JsonValueSchema (M2: -0 rejected …)") | Yes, Q6 |
 | DV-M2-13 | K | CLI entry detection (`invokedDirectly`, case-insensitive on Windows) runs `main` under `tsx cli/hls.ts` and does not run it when tests import `main` | No tsx | `npm run hls -- --help` (prints help, exit 0) | Yes, Q6 |
 | DV-M2-14 | K | Gate execution applies the trusted-CLI protected-file check (static.json sha256 mismatch or missing file fails every `do_not_touch` group with `static_check`; `applyProtectedFileCheck` in `src/tasks/validate.ts`). Forbidden identifiers (TypeScript compiler API, D17) are NOT yet checked by the gate: M4 adds them and must route their `static_check` failures through the same function | Never executed; compiler-API check is M4 | `npx vitest run tests/validate.test.ts`, then DV-M2-04 and `npm run validate:dev` (T01/T02 R7 mutants fail R7 with `static_check`) | Yes, Q6 |
+
+## M6 dev corpus and custody sources
+
+| ID | Class | What | Why deferred | Exact later command | Needs owner? |
+|---|---|---|---|---|---|
+| DV-M6-01 | K | T03–T06 oracle, untouched, isolated mutant matrix, protected file checks, pure-data gate and strict candidate types | Source inspection does not execute candidate code | `npx tsx cli/hls.ts validate tasks/dev --execute --report validate-report.json` | Q6 |
+| DV-M6-02 | K | All six dev tasks' A1/A2 alternate solutions pass all groups | No tests in Dirty Mode | `npm run check:alternates` | Q6 |
+| DV-M6-03 | K | Product matcher verbatim-forward and exact seed/hash slot assignment agree for all 48 requirements | Source-only checks and independent SHA-256 calculations do not execute product matcher | `npm run selftest` and `npm run validate:dev` | Q6 |
+| DV-M6-04 | K | Six-cell mock walkthrough on T01, full store/verify/report/viewer chain and fixture expectations | No mock/application execution in Dirty Mode | `npx tsx cli/hls.ts demo --provider mock` then `npm run verify -- results/demo` | Q6 |
+| DV-M6-05 | K | Custodian appointment, original synthetic MIT rights, two-dev-task expected-answer spot-check | Builder cannot supply independent labels or appoint its own child | Roy appointment and rights record, then appointed custodian follows `docs/CUSTODIAN-PACKET.md` | Q2 |
+| DV-M6-06 | L | Independent conformance, calibration and held-out study; 12 tasks authored only after recipe freeze | No custodian, live access or execution grant; all gates remain pending | Custodian packet phases 1–3; freeze matcher before sealed evaluation, recipe after G-C, prereg before T2 | Q1/Q2/Q3/Q5/Q6 |
+
+T03–T06 are public development sources, with a shared projection scaffold and deliberately isolated policy helpers. Their oracle/test agreement has not been proved by execution. Domain variety and guessability need calibration; no held-out or measured claim follows from construction.
+
+
+## M4 runner, providers and sandbox
+
+Construction is source/static only. No dependency install, typecheck, lint, test, model call, image build,
+container, application or public smoke-test execution has occurred for this package. Recorded-shape
+Anthropic fixtures are hand-authored and unverified against the live API. Provisional prices are not
+an approval-day price check. No approval files or credentials are supplied.
+
+| ID | Later command/action | Required evidence |
+| --- | --- | --- |
+| DV-M4-01 | `npm run typecheck && npm run lint` | Strict interface/type and lint results after authorised install |
+| DV-M4-02 | `npm test -- tests/tools.test.ts tests/budget.test.ts tests/ledger.test.ts tests/anthropic-mapping.test.ts tests/channels.test.ts tests/policies.test.ts` | Closed tools, all six policies, byte reservations, retries and unknown/overrun stops |
+| DV-M4-03 | `npm run check:budget` | Reservation bound calibration, cached input/replay/retry accounting; tranche stop on overrun |
+| DV-M4-04 | `npm run check:containment` | Real traversal/symlink/peer-root/hidden-file refusal and visibility audit |
+| DV-M4-05 | With explicit Docker consent and registered agent-ports owner, build the three `docker/*.Dockerfile` files and pin resulting image digests | No candidate hidden mounts; non-root, offline, read-only/resource flags; dependencies and image assumptions verified |
+| DV-M4-06 | Authorised D-class two-container attacks: stdout spoofing/noise/oversize, hanging exports, process exit, fork/memory abuse, hidden-path/credential/socket reads | Each affected group fails; grader-only result-file authority; owner-labelled cleanup verified |
+| DV-M4-07 | Authorised Docker public smoke tests | Public tests run without hidden material; summary only, no unknown-source code echo |
+| DV-M4-08 | Owner-approved live mapping/price check (Q1) | Signed decision verifier, durable atomic spend port, exact pinned/observed model, API shape, usage and approval-day prices |
+| DV-M4-09 | SYNTHETIC six-cell mock run and cap-hit/crash snapshot regression | Events sequential; both context handoffs frozen before exchange; cap-hit grades final edits; no fabricated grades |
+
+The portable runner accepts explicit ports for public tests, Docker ownership/consent, Roy decision
+verification, and durable tranche spending. Missing ports fail closed; their real operational wiring and
+cross-process behavior remain unverified. `reservation_overrun`, `usage_unknown` and integrity stops
+must stop the calling tranche; a caller must not continue dispatching later runs after these results.
+
+
+## M5 records, analysis, viewer and stable custody
+
+Construction is source/static only. No install, test, build, app execution, Docker, live dispatch,
+credential read, prereg freeze execution or held-out content read occurred. Syntax checks are not
+TypeScript typechecking. Review of TSX is source inspection only. Source tests are written, never run.
+
+| ID | Later command / action | Current status |
+| --- | --- | --- |
+| M5-K1 | `npm run typecheck` and `npm run lint` | DEFERRED |
+| M5-K2 | `npm run check:stats`; `npm test -- tests/stats.test.ts` | DEFERRED |
+| M5-K3 | `npm test -- tests/store.test.ts tests/verify.test.ts tests/approvals.test.ts tests/prereg.test.ts tests/live-state.test.ts tests/carry-custody.test.ts` | DEFERRED |
+| M5-K4 | `npm run demo -- --provider mock`; `npm run verify -- results/demo` | DEFERRED |
+| M5-K5 | One-byte event/footer/evidence/snapshot tamper must fail verification; restore from test-owned copies | DEFERRED |
+| M5-K6 | `npm run report -- results/demo`; inspect report JSON/Markdown/HTML and all zero denominators | DEFERRED |
+| M5-K7 | `npm run plan -- --tranche T0`; repeat T1/T2 and inspect 6/90/216 counts and price bound | DEFERRED |
+| M5-K8 | `npm run study -- --live` must refuse nonzero without approval and make no dispatch | DEFERRED |
+| M5-K9 | `npm run build`; open viewer and malicious-text/mixed-edition report fixtures; text must remain escaped | DEFERRED |
+| M5-K10 | Crash/concurrent/stale locks, app/approval/tranche caps, unsettled/failed requests and corruption checks for trusted LiveStateJournal | DEFERRED |
+| M5-K11 | Sealed carry stable claim: two receipt directories, changed matcher/decision with same sealed digest, loader failure/interruption before results, missing authority and receipt-write failure; loader reached at most once | DEFERRED, metadata-only regression source |
+| M5-L1 | Appoint custodian; actual G-A/G-I evidence; approve prices/model/spend; supply owner consent/Docker ports | PENDING OWNER, no fabricated receipts |
+| M5-L2 | T0 calibration then T1; actual G-C, allowance freeze, manifest import and prereg freeze | PENDING previous gates |
+| M5-L3 | Authenticated custodian loader, approved image digests/lane and once-only T2 | PENDING previous gates |
+
+Missing operator activation ports are intentional fail-closed runtime dependencies. All keyless paths,
+store/statistics/report/viewer sources are present; actual type/runtime correctness remains unverified.
+Run counts 6/90/216 exclude zero-model-call null/oracle controls, which are graded and stored separately.
+Gzipped transcript verification also rejects a changed uncompressed companion. The deferred spend
+tests cover unsettled/failed requests, duplicate settlements, corruption, missing/malformed authority,
+app-wide sums across different approvals/tranches, changed-output T2 replay after start/burn, changed
+approval/prereg heldout reuse, stale locks and actual overrun charges. No regression has executed.
+Trusted operator stateRoot provisioning and persistence/recovery must be verified before activation;
+there is no report-folder fallback and no real state was created during construction.
+
+M5-R2 source extends the same stable journal with exclusive, fsynced sealed-digest claims before
+`loadSealedCarryPairs`. Completion, conformance stop, loader/validation/write failure and a crash
+with only the start all retain consumption. Carry finish entries use closed metadata outcome codes;
+raw custodian errors, pairs, labels and evaluation rows never enter operator state. The new command
+regressions narrowly replace the public-pair parser with a metadata-only stub and supply no sealed
+content or gold labels; they test custody, not semantic conformance. New matcher editions need new
+custodian-authored sealed digests. Actual state provisioning, real loader authentication, filesystem
+durability/concurrency and custodian G-I evaluation remain deferred. No test has executed.

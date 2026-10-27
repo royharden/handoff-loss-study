@@ -37,35 +37,37 @@ Rows are pre-filled from the plan of record §12 (compound items split so each r
 
 | # | Milestone | Item | Inspected file:line | Pass/fail | Reviewer callsign |
 |---|---|---|---|---|---|
-| M2-1 | M2 | Every `.ts` file passes `node --check` | | | |
-| M2-2 | M2 | Classification table §4.9 implemented exactly (reviewer traces each fixture to its expected class by hand) | | | |
-| M2-3 | M2 | Evidence uses token-boundary matching (§4.3) | | | |
-| M2-4 | M2 | Normalisation uses NFKC and the §4.1 folds (quotes, whitespace, emphasis, backticks, `n't`, `cannot`) | | | |
-| M2-5 | M2 | `unknown` forced on missing artifacts | | | |
-| M2-6 | M2 | `unknown` forced on failed prerequisites | | | |
-| M2-7 | M2 | `unknown` forced on anchors found only in marked clauses | | | |
-| M2-8 | M2 | Clause boundaries: line / `;` / JSON string / list item, with inherited heading (any level) and list intro (§4.4) | | | |
-| M2-9 | M2 | Closed marker list (13 markers, §4.5) and `prohibitions[]` elements treated as marked | | | |
-| M2-10 | M2 | `entity_cue` rules incl. state-cue negation and `prohibitions[]` handling (§4.6.2) | | | |
-| M2-11 | M2 | Marker-aware `decoy_conflict` (§4.6.3) and group combination positive/negative/unknown (§4.6.1) | | | |
-| M2-12 | M2 | Evidence state per eligible edge follows §4.7; full-trace tool-result segments excluded (§4.2) | | | |
-| M2-13 | M2 | Each builder self-test pair's expected state follows from §4 by hand trace | | | |
-| M2-14 | M2 | `builder-selftest.json` has ≥ 40 pairs incl. one per case listed in §12 M2 scope | | | |
-| M2-15 | M2 | Visibility audit tags segment provenance and exempts `self` segments | | | |
-| M2-16 | M2 | Validate cond. 4 rejects its planted bad task | | | |
-| M2-17 | M2 | Validate cond. 5 rejects its planted bad task | | | |
-| M2-18 | M2 | Validate cond. 6 rejects its planted bad task | | | |
-| M2-19 | M2 | Validate cond. 6b rejects its planted bad task | | | |
-| M2-20 | M2 | Validate cond. 6c rejects its planted bad task | | | |
-| M2-21 | M2 | Validate cond. 6d rejects its planted bad task | | | |
-| M2-22 | M2 | Validate cond. 6e rejects its planted bad task | | | |
-| M2-23 | M2 | Validate cond. 6f rejects its planted bad task | | | |
-| M2-24 | M2 | Validate cond. 7 rejects its planted bad task | | | |
-| M2-25 | M2 | Validate cond. 8 rejects its planted bad task | | | |
-| M2-26 | M2 | Cond. 2 and cond. 3 bad tasks exist with expected rejection recorded in `fixtures/expected.json` | | | |
-| M2-27 | M2 | SYNTHETIC/live record mixing throws | | | |
-| M2-28 | M2 | `fixtures/expected.json` values follow from the fixtures | | | |
-| M2-29 | M2 | No network/provider import reachable from the `selftest`/`demo` path | | | |
+| M2-1 | M2 | Every `.ts` file passes `node --check` | 135 M2-commit paths: 70 prior High-review passes + 65 parent continuation; durable outer receipts M2-codex-r2-high-syntax.jsonl and M2-parent-syntax-continuation.jsonl; changed matcher/regression separately parsed by 0928 | pass (syntax only) | 0932_Codex_gpt-61-sol_Sub_S42M2ReviewHigh; completion recorded by 0910_Codex_gpt-61-sol_N20CodexInt42 |
+| M2-2 | M2 | Classification table §4.9 implemented exactly (reviewer traces each fixture to its expected class by hand) | src/score/classify.ts:77; fixtures/scripted/*.json:1; fixtures/expected.json:8-115 (18 recorded class traces agree) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-3 | M2 | Evidence uses token-boundary matching (§4.3) | src/score/normalize.ts:81 (unsplit case-sensitive occurrences and both token boundaries) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-4 | M2 | Normalisation uses NFKC and the §4.1 folds (quotes, whitespace, emphasis, backticks, `n't`, `cannot`) | src/score/normalize.ts:58; tests/evidence.test.ts:29 (folds read by inspection) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-5 | M2 | `unknown` forced on missing artifacts | src/score/evidence.ts:426 (empty artifacts -> missing_artifact unknown) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-6 | M2 | `unknown` forced on failed prerequisites | src/score/evidence.ts:442; src/score/classify.ts:69 (prerequisite_failed) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-7 | M2 | `unknown` forced on anchors found only in marked clauses | src/score/evidence.ts:266,281,444 (marked_only -> unknown) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-8 | M2 | Clause boundaries: line / `;` / JSON string / list item, with inherited heading (any level) and list intro (§4.4) | src/score/evidence.ts:178,326-338,360 (inherited cues/state cues now used; M2-R1 resolved) | pass | 0932_Codex_gpt-61-sol_Sub_S42M2ReviewHigh |
+| M2-9 | M2 | Closed marker list (13 markers, §4.5) and `prohibitions[]` elements treated as marked | src/score/evidence.ts:61,245 (13 markers; prohibitionElement marked) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-10 | M2 | `entity_cue` rules incl. state-cue negation and `prohibitions[]` handling (§4.6.2) | src/score/evidence.ts:326-338,360; tests/evidence.test.ts:123-130 (inherited cue and state-cue negation agree with frozen 4.4/4.6.2) | pass | 0932_Codex_gpt-61-sol_Sub_S42M2ReviewHigh |
+| M2-11 | M2 | Marker-aware `decoy_conflict` (§4.6.3) and group combination positive/negative/unknown (§4.6.1) | src/score/evidence.ts:281,391 (all/any/unknown combination and marked decoy ignored) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-12 | M2 | Evidence state per eligible edge follows §4.7; full-trace tool-result segments excluded (§4.2) | src/score/evidence.ts:229,426 (carrier filter and state precedence) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-13 | M2 | Each builder self-test pair's expected state follows from §4 by hand trace | fixtures/carry-conformance/builder-selftest.json:482,680,691 (B44/B62 evidence, B63 unknown hand-traced); other 60 retain 0916 review | pass | 0932_Codex_gpt-61-sol_Sub_S42M2ReviewHigh |
+| M2-14 | M2 | `builder-selftest.json` has ≥ 40 pairs incl. one per case listed in §12 M2 scope | fixtures/carry-conformance/builder-selftest.json:1-702 (63 parsed pairs, all named required cases present) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-15 | M2 | Visibility audit tags segment provenance and exempts `self` segments | src/score/visibility.ts:82,93 (assistant self plus tagged request segments; self exempt) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-16 | M2 | Validate cond. 4 rejects its planted bad task | src/tasks/validate.ts:93; fixtures/bad-tasks/c4-secret-in-filename/repo/notes-7331.md:1 (path token) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-17 | M2 | Validate cond. 5 rejects its planted bad task | src/tasks/validate.ts:110; fixtures/bad-tasks/c5-entity-missing-from-repo/task.json:1 (src/interfaces.ts absent) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-18 | M2 | Validate cond. 6 rejects its planted bad task | src/tasks/validate.ts:135; fixtures/bad-tasks/c6-anchor-missing-from-slice/spec.md:1 (7331 moved to B) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-19 | M2 | Validate cond. 6b rejects its planted bad task | src/tasks/validate.ts:147; fixtures/bad-tasks/c6b-secret-only-negated/spec.md:1 (4096 only marked) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-20 | M2 | Validate cond. 6c rejects its planted bad task | src/tasks/validate.ts:164; fixtures/bad-tasks/c6c-decoy-unmarked/spec.md:16 (9000 unmarked) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-21 | M2 | Validate cond. 6d rejects its planted bad task | src/tasks/validate.ts:175; fixtures/bad-tasks/c6d-entity-not-protected/spec.md:1 (not protected -> unknown) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-22 | M2 | Validate cond. 6e rejects its planted bad task | src/tasks/validate.ts:191; fixtures/bad-tasks/c6e-brief-secret/brief.md:3 (7331 in brief) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-23 | M2 | Validate cond. 6f rejects its planted bad task | src/tasks/validate.ts:210; fixtures/bad-tasks/c6f-short-decoy/task.json:1 (9 too short and inside 4096) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-24 | M2 | Validate cond. 7 rejects its planted bad task | src/tasks/validate.ts:225; fixtures/bad-tasks/c7-duplicate-anchor/task.json:1 (clockPort.now repeated across R1/R2) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-25 | M2 | Validate cond. 8 rejects its planted bad task | src/tasks/validate.ts:250; fixtures/bad-tasks/c8-overlapping-slices/task.json:1 (A heading belongs to both slices) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-26 | M2 | Cond. 2 and cond. 3 bad tasks exist with expected rejection recorded in `fixtures/expected.json` | fixtures/expected.json:181; fixtures/bad-tasks/c2-untouched-passes-a-group/hidden/core.ts:1; c3-mutant-breaks-two-groups/mutants/R2/src/a.ts:1 (recorded execution failures 2/3; NOT executed) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-27 | M2 | SYNTHETIC/live record mixing throws | src/core/contracts.ts:940; cli/hls.ts:203 (edition mismatch throws; selftest explicitly checks) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+| M2-28 | M2 | `fixtures/expected.json` values follow from the fixtures | fixtures/expected.json:160,178-179 match corrected B44/B62/B63; other scripted/data traces retain 0916 review | pass | 0932_Codex_gpt-61-sol_Sub_S42M2ReviewHigh |
+| M2-29 | M2 | No network/provider import reachable from the `selftest`/`demo` path | cli/hls.ts:24-44,355; src/score/fixture.ts:19-49; src/providers/null.ts:1; src/providers/scripted.ts:1 (keyless import graph read) | pass | 0916_Codex_gpt-61-sol_Sub_S42M2Review |
+
+Review 2026-10-27 against M2 commit 538440b plus High fix e97f4df: **M2 accepted for Dirty Mode construction; runtime unverified**. Rows 8/10/13/28 re-reviewed by 0932; other rows retain 0916 attribution. Parent 0910 reconciled all 135 syntax paths (70 High-review passes plus 65 completed parent continuation passes, zero errors). Detailed receipts remain in the outer shell: M2-codex-r1.md, M2-codex-r2-high.md, M2-codex-r2-high-syntax.jsonl, M2-parent-syntax-continuation.jsonl and M2-construction-acceptance.json. This is builder-lineage source acceptance, never G-A/G-I or a runtime result.
 
 ## M3 — Dev prototypes T01, T02 and the recipe
 
@@ -74,8 +76,8 @@ Rows are pre-filled from the plan of record §12 (compound items split so each r
 | M3-1 | M3 | T01/T02 `task.json` parse (`node -e`) and match the M1 zod shape by inspection | tasks/dev/T01/task.json:1-127, tasks/dev/T02/task.json:1-124 vs src/core/contracts.ts:111-250 (ed2d994), ids.ts:18-39,150-161 (node -e JSON.parse OK; slot routing, cross_module_contract in transfer, do_not_touch entity, slotAssignment.input prefix, summaries <=500 by inspection) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
 | M3-2 | M3 | All eight trap kinds present once (T01, T02) | T01/task.json:29,42,56,68,80,92,104,116; T02/task.json:29,41,53,65,77,89,101,113 (each of the 8 kinds once) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
 | M3-3 | M3 | Slot counts 2/2/2/2 (T01, T02) | T01/task.json:30-117 (R1,R4 local_A; R5,R7 local_B; R6,R8 transfer_A_to_B; R2,R3 transfer_B_to_A); T02/task.json:30-114 (R1,R7 local_A; R3,R5 local_B; R6,R8 transfer_A_to_B; R2,R4 transfer_B_to_A) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
-| M3-4 | M3 | `task.json` records slot-assignment hash input `<taskId>:<seed>`, its sha256 (computed with `sha256sum`), and the assignment per `docs/TASK-RECIPE.md` | T01/task.json:21-25, T02/task.json:21-25; docs/TASK-RECIPE.md:45-92 (reviewer recomputed `printf %s T0n:1 | sha256sum` = recorded digests; re-derived Fisher-Yates + T01 R6 fix-up independently; matches recorded slots) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
-| M3-5 | M3 | Secret anchors absent from `repo/` (grep) | T01/repo/** and T02/repo/** incl. tests/smoke.test.ts: grep -rnF and find|grep -F on every secret alternate; no hit in contents, names or paths | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-4 | M3 | `task.json` records slot-assignment hash input `<taskId>:<seed>`, its sha256 (computed with `sha256sum`), and the assignment per `docs/TASK-RECIPE.md` | T01/task.json:21-25, T02/task.json:21-25; docs/TASK-RECIPE.md:45-92 (reviewer recomputed `printf %s T0n:1` piped into `sha256sum` = recorded digests; re-derived Fisher-Yates + T01 R6 fix-up independently; matches recorded slots) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-5 | M3 | Secret anchors absent from `repo/` (grep) | T01/repo/** and T02/repo/** incl. tests/smoke.test.ts: grep -rnF and find output filtered with grep -F on every secret alternate; no hit in contents, names or paths | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
 | M3-6 | M3 | Every anchor present in `spec.md` and in its named slice | T01/spec.md:12,14,18,24,28,30,34,38 (slices task.json:18-19); T02/spec.md:10,12,18,22,24,28,32,36 (slices task.json:18-19); entity anchors present as repo/src/contracts.ts, repo/src/types.ts | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
 | M3-7 | M3 | Slices partition the spec exactly | T01/spec.md:1,10,16,20,26,32,36 = A 4 + B 3 headings (task.json:18-19); T02/spec.md:1,8,14,20,26,34 = A 3 + B 3 (task.json:18-19); exact cover, no overlap | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
 | M3-8 | M3 | Cond. 6b: each secret anchor has an unmarked-clause occurrence in its slice and in `spec.md` | T01/spec.md:12,14 (clause before `;`),18,28,30,34,38; T02/spec.md:10,18,22,24 (clause before `;`),28,32,36: no 4.5 marker or n't/cannot in clause, heading or list intro (grep -iw over both specs: markers only at T01:14 second clause, T01:40, T02:30, T02:38) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
@@ -92,54 +94,64 @@ Rows are pre-filled from the plan of record §12 (compound items split so each r
 
 | # | Milestone | Item | Inspected file:line | Pass/fail | Reviewer callsign |
 |---|---|---|---|---|---|
-| M4-1 | M4 | Every `.ts` file passes `node --check` | | | |
-| M4-2 | M4 | `docs/SANDBOX.md` lists read and write roots per policy and phase | | | |
-| M4-3 | M4 | `docs/SANDBOX.md` states no evaluator/credential/home-dir/Docker-socket mount and no shell tool | | | |
-| M4-4 | M4 | Tool layer refuses paths outside the worker's view, traversal, symlinks and out-of-module writes, and logs them | | | |
-| M4-5 | M4 | Implementer and context workers have no tool or prompt path to unseen spec text | | | |
-| M4-6 | M4 | Phase-2 workspaces are disjoint | | | |
-| M4-7 | M4 | Every policy's initial view (single, planner, implementer, context A/B, spec-blind) includes `brief.md` | | | |
-| M4-8 | M4 | Every provider dispatch site calls `budget.reserve()` first | | | |
-| M4-9 | M4 | Reservation formula = D7 | | | |
-| M4-10 | M4 | 90k request ceiling enforced | | | |
-| M4-11 | M4 | Retry ≤ 1 per call and reserved | | | |
-| M4-12 | M4 | Unknown usage books the reservation and halts the run | | | |
-| M4-13 | M4 | Reservation overrun stops the tranche | | | |
-| M4-14 | M4 | `anthropic` adapter refuses unless `HLS_LIVE_ENABLED` and a valid approval are present | | | |
-| M4-15 | M4 | `anthropic` adapter has SDK retries off and reads the key only from `ANTHROPIC_API_KEY` | | | |
-| M4-16 | M4 | Docker argv contains every D17 flag and the owner labels | | | |
-| M4-17 | M4 | Candidate container mounts/Dockerfile include no hidden test, predicate, oracle or mutant path | | | |
-| M4-18 | M4 | Grader verdict comes only from the grader container's results file, never candidate stdout | | | |
-| M4-19 | M4 | Relay enforces size/time limits and fails the invocation on protocol noise, exit or timeout | | | |
+| M4-1 | M4 | Every `.ts` file passes `node --check` | M4 source files below; coder-reported batches 23 initial + 15 final/new + last 2 changed passed; repair coder 0937 reports all 5 changed TS files parsed; attributed reports, not rerun by reviewers; source inspected | pass (attributed syntax reports) | 0933_Codex_gpt-61-sol_Sub_S42M4Review; 0938_Codex_gpt-61-sol_Sub_S42M4ReviewHigh (repair source) |
+| M4-2 | M4 | `docs/SANDBOX.md` lists read and write roots per policy and phase | docs/SANDBOX.md:21-46 (all policies/phases, exact module writes) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-3 | M4 | `docs/SANDBOX.md` states no evaluator/credential/home-dir/Docker-socket mount and no shell tool | docs/SANDBOX.md:40,57-60 | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-4 | M4 | Tool layer refuses paths outside the worker's view, traversal, symlinks and out-of-module writes, and logs them | src/runner/workspace.ts:18-39; src/tasks/load.ts:100-107; src/runner/tools.ts:63-66 (ordinary errors/refusals retained after integrity rethrow); src/runner/episode.ts:82-84 (refusal event) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review; 0938_Codex_gpt-61-sol_Sub_S42M4ReviewHigh (affected catch) |
+| M4-5 | M4 | Implementer and context workers have no tool or prompt path to unseen spec text | src/runner/policies/role.ts:6; context.ts:7-12; episode.ts:65-69 (audit before dispatch) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-6 | M4 | Phase-2 workspaces are disjoint | src/runner/policies/context.ts:8-12; workspace.ts:20,39; episode.ts:117-125; merge.ts:4-7 (independent byte copies, no peer path) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-7 | M4 | Every policy's initial view (single, planner, implementer, context A/B, spec-blind) includes `brief.md` | src/runner/policies/single.ts:6-14; role.ts:5-6; context.ts:9; spec-blind.ts:4 | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-8 | M4 | Every provider dispatch site calls `budget.reserve()` first | src/providers/ledger.ts:26-35; src/runner/episode.ts:70 (single runner dispatch path) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-9 | M4 | Reservation formula = D7 | src/runner/budget.ts:33-34; src/core/contracts.ts:342-354; providers/anthropic.ts:78,83 (exact serialized body) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-10 | M4 | 90k request ceiling enforced | src/runner/budget.ts:19,36; src/core/contracts.ts:329; providers/anthropic.ts:84 | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-11 | M4 | Retry ≤ 1 per call and reserved | src/providers/ledger.ts:24-42; runner/budget.ts:19,50-53; core/contracts.ts:330 (failed reservation booked, next reserve before retry) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-12 | M4 | Unknown usage books the reservation and halts the run | src/providers/ledger.ts:44-50; runner/budget.ts:40-46; runner/episode.ts:128-135 | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-13 | M4 | Reservation overrun stops the tranche | src/runner/budget.ts:43-46; episode.ts:128-136; cli/study.ts:228-235 (current locations: nonnull exclusion, including integrity_stop, throws before next planned run or baseline grading) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review; 0938_Codex_gpt-61-sol_Sub_S42M4ReviewHigh (affected stop seam) |
+| M4-14 | M4 | `anthropic` adapter refuses unless `HLS_LIVE_ENABLED` and a valid approval are present | src/providers/anthropic.ts:23-33,78-86 (scope, expiry, signed-decision verifier, price hash, atomic spend port) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-15 | M4 | `anthropic` adapter has SDK retries off and reads the key only from `ANTHROPIC_API_KEY` | src/providers/anthropic.ts:88-98 (one fetch, only named environment lookup, generic transport errors and loaded-secret redaction) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-16 | M4 | Docker argv contains every D17 flag and the owner labels | src/sandbox/docker.ts:33-44,109-110,137; docker/*.Dockerfile (UIDs 10001/10002, offline, readonly, resource limits, pull-never, labels) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-17 | M4 | Candidate container mounts/Dockerfile include no hidden test, predicate, oracle or mutant path | docker/candidate.Dockerfile:5-6; src/sandbox/docker.ts:39,92-96,109-110 (public source extraction and separate mounts) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-18 | M4 | Grader verdict comes only from the grader container's results file, never candidate stdout | src/sandbox/docker.ts:112-114; grader/entry.ts:25-29; relay.ts:14 (RPC results only) | pass | 0933_Codex_gpt-61-sol_Sub_S42M4Review |
+| M4-19 | M4 | Relay enforces size/time limits and fails the invocation on protocol noise, exit or timeout | src/sandbox/relay.ts:8-22; grader/protocol.ts:2-32 (prior relay review retained). Related D17 lifecycle M4-R1 resolved: docker.ts:29-31,48-54,153 -> sandbox/port.ts:21-23 -> runner/tools.ts:63-66 -> episode.ts:128-138; tests/tools.test.ts:15-23, policies.test.ts:21-55 (regression source only) | pass; M4-R1 resolved in source | 0933_Codex_gpt-61-sol_Sub_S42M4Review (relay); 0938_Codex_gpt-61-sol_Sub_S42M4ReviewHigh (cleanup repair) |
+
+M4 static construction verdict: **PASS after focused High M4-R1 re-review — accepted for Dirty Mode construction, runtime unverified**. The prior Medium FAIL remains historical in outer `agentops/reviews/M4-codex-r1.md`; its other eighteen rows and literal relay review are retained. The actual D17 cleanup `SandboxIntegrityError` now passes through the tool catch, becomes `integrity_stop` at the episode catch, burns T2, preserves partial current writes, and bypasses later tools/provider dispatch/hidden grading. Ordinary tool errors remain recoverable and hidden-grade cleanup classification is preserved. Regression source covers the two catch boundaries and stop/retention assertions; tests have not run. Current CLI stop seam at `cli/study.ts:228-235` still throws before another run or baseline grade. Scoped repair receipt and exact source pins: outer `agentops/reviews/M4-codex-r2-high.md`, reviewer 0938_Codex_gpt-61-sol_Sub_S42M4ReviewHigh. Runtime, typecheck, tests, live mapping, Docker attacks and cleanup execution remain unverified.
 
 ## M5 — Store, verify, statistics, report, CLI plan/run/prereg/heldout, viewer
 
 | # | Milestone | Item | Inspected file:line | Pass/fail | Reviewer callsign |
 |---|---|---|---|---|---|
-| M5-1 | M5 | Every `.ts` file passes `node --check` (`.tsx` by inspection only) | | | |
-| M5-2 | M5 | McNemar exact two-sided yields 14/64 for (5,1) by reviewer arithmetic | | | |
-| M5-3 | M5 | Bootstrap resamples tasks keeping all cells/repeats, with a fixed seed | | | |
-| M5-4 | M5 | Zero denominators render "undefined" | | | |
-| M5-5 | M5 | Hash chain covers every event and the footer | | | |
-| M5-6 | M5 | `run --live` refuses with no approval | | | |
-| M5-7 | M5 | `run --live` refuses a mismatched approval (tranche/model/cells/tasks/repeats/maxTokens/maxUsd) | | | |
-| M5-8 | M5 | `run --live` refuses an expired approval | | | |
-| M5-9 | M5 | `run --live` refuses a missing named approver or owner decision reference | | | |
-| M5-10 | M5 | `run --live` refuses when `HLS_LIVE_ENABLED` is unset | | | |
-| M5-11 | M5 | `run --live` refuses when spend + bound > `maxUsd` | | | |
-| M5-12 | M5 | `plan` constants and code path give T0 6 / T1 90 / T2 216 and bounds from the price table | | | |
-| M5-13 | M5 | Viewer escapes text (no `dangerouslySetInnerHTML` with data); source inspection only | | | |
+| M5-1 | M5 | Every `.ts` file passes `node --check` (`.tsx` by inspection only) | outer agentops/m5-0918-syntax-20261027.json:1 (27 prior attributed coder syntax passes; 35/35 original source pins matched); outer agentops/m5-0944-syntax-20261027.json:1 (3 parses attributed to 0944; 6/6 repair pins matched by 0945); outer agentops/m5-0946-syntax-20261027.json:1 (4 parses attributed to 0946; 7/7 working and frozen pins matched by 0947); viewer/main.tsx:1 (original inspection) | pass (attributed syntax; TSX inspection only) | 0934_Codex_gpt-61-sol_Sub_S42M5Review; 0945_Codex_gpt-61-sol_Sub_S42M5ReviewHigh; 0947_Codex_gpt-61-sol_Sub_S42M5ReviewXHigh (current pins/source) |
+| M5-2 | M5 | McNemar exact two-sided yields 14/64 for (5,1) by reviewer arithmetic | src/stats/mcnemar.ts:2; docs/STATISTICS.md:37 (2*(choose(6,0)+choose(6,1))/64 = 14/64) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review |
+| M5-3 | M5 | Bootstrap resamples tasks keeping all cells/repeats, with a fixed seed | src/stats/aggregate.ts:11; src/stats/cluster.ts:17; src/stats/rng.ts:2; src/core/contracts.ts BOOTSTRAP_SEED (repeat means, complete paired task differences; 10000 draws, seed 42001) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review |
+| M5-4 | M5 | Zero denominators render "undefined" | src/stats/aggregate.ts:10; src/report/tables.ts:2; viewer/main.tsx:7 (null preserved in JSON; undefined in table/viewer) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review |
+| M5-5 | M5 | Hash chain covers every event and the footer | src/store/chain.ts:9; src/store/jsonl.ts:22; src/store/load.ts:23 (events+footer chain, evidence/snapshot hashes and score/visibility recomputation) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review |
+| M5-6 | M5 | `run --live` refuses with no approval | cli/study.ts:135-142; cli/hls.ts:361 (approval existence then parse; absent activation port refuses before provider import) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review; 0945_Codex_gpt-61-sol_Sub_S42M5ReviewHigh (changed seam) |
+| M5-7 | M5 | `run --live` refuses a mismatched approval (tranche/model/cells/tasks/repeats/maxTokens/maxUsd) | src/store/approval.ts:8; cli/study.ts:137,180; tests/approvals.test.ts:23 (also specBlindRunsPerTask and price hash) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review; 0945_Codex_gpt-61-sol_Sub_S42M5ReviewHigh (changed seam) |
+| M5-8 | M5 | `run --live` refuses an expired approval | src/store/approval.ts:11; cli/study.ts:137,180 (current approval checked again per run) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review; 0945_Codex_gpt-61-sol_Sub_S42M5ReviewHigh (changed seam) |
+| M5-9 | M5 | `run --live` refuses a missing named approver or owner decision reference | src/store/approval.ts:13; cli/study.ts:137,141; approvals/README.md:10; src/store/live-state.ts:37-41 (injected actual-decision verifier; optional digest else exact authenticated canonical reference; no default consent) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review; 0945_Codex_gpt-61-sol_Sub_S42M5ReviewHigh (changed seam); 0947_Codex_gpt-61-sol_Sub_S42M5ReviewXHigh (unchanged body verified) |
+| M5-10 | M5 | `run --live` refuses when `HLS_LIVE_ENABLED` is unset | src/store/approval.ts:9; cli/study.ts:137,180; src/providers/anthropic.ts:19 | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review; 0945_Codex_gpt-61-sol_Sub_S42M5ReviewHigh (changed seam) |
+| M5-11 | M5 | `run --live` refuses when spend + bound > `maxUsd` | src/store/approval.ts:16; cli/study.ts:142,165,180,194; src/store/live-state.ts:79-109,127-158; src/providers/anthropic.ts:84 (trusted stable app USD40 plus stored approval/tranche caps; full unknown reservation retained, actual overrun not clamped; output-independent) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review; 0945_Codex_gpt-61-sol_Sub_S42M5ReviewHigh (repair source); 0947_Codex_gpt-61-sol_Sub_S42M5ReviewXHigh (preserved bodies/diff) |
+| M5-12 | M5 | `plan` constants and code path give T0 6 / T1 90 / T2 216 and bounds from the price table | cli/study.ts:46 (1*6*1=6; 6*6*2+6*3=90;12*6*3=216; count*C*max price/1e6) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review |
+| M5-13 | M5 | Viewer escapes text (no `dangerouslySetInnerHTML` with data); source inspection only | viewer/main.tsx:10; viewer/data.ts:7; src/report/html.ts:3 (React text children/pre/select plus escaped HTML; mixed edition/tranche/matcher and duplicate IDs refused) | pass | 0934_Codex_gpt-61-sol_Sub_S42M5Review |
+
+M5 final focused xhigh verdict: **PASS for Dirty Mode construction — M5-R2 resolved in source; accepted M5-R1 preserved. Runtime unverified.** Review: outer `agentops/reviews/M5-codex-r3-xhigh.md`, reviewer 0947_Codex_gpt-61-sol_Sub_S42M5ReviewXHigh. The Medium FAIL (`agentops/reviews/M5-codex-r1.md`) and High FAIL (`agentops/reviews/M5-codex-r2-high.md`) remain preserved history. The thirteen literal checklist passes retain their attributed reviewers above; this focused review closes the integration defect without re-attesting unrelated M5 behavior.
+
+Original M5-R1 repair preserved: cli/study.ts executePlan body, live-state approval identity/provisioning and live-attempt method bodies, and original M5-R1 regression cases equal the accepted 0944 candidate. src/store/live-state.ts:53-109,127-158 retains the pre-existing outside-product authority, exclusive-lock/fsynced journal, app USD40 and approval/tranche caps, full unknown charges and unclamped actual overruns. cli/study.ts:165 still claims T2 before imports/loader/dispatch; prereg or heldout matches remain consumed across outputs/approvals/crashes. Catch at :232-240 retains actual stop/burn reasons. Original regression source is now tests/live-state.test.ts:69-149; none executed.
+
+M5-R2 source closure: cli/study.ts:329-332 constructs the actual existing LiveStateJournal and claims sealedPairsSha256 before receipt creation or loadSealedCarryPairs at :341. src/store/live-state.ts:71-77,111-125 keys consumption by sealed digest alone; matcher/public/decision/destination changes cannot reset it. The locked append at :103-109 fsyncs before returning. Started/completed/failed/interrupted evaluations stay consumed, including receipt/result/finish write failure; receipt files are presentation only. Carry outcomes use closed metadata codes without raw exceptions, pairs or semantic labels (cli/study.ts:333-362). tests/live-state.test.ts:22-67 and tests/carry-custody.test.ts:11-102 provide journal and actual-command regression source with metadata-only public parser and opaque throwing/nonreturning loaders; no semantic/gold data is authored or supplied. Frozen D19b's new-matcher/new-sealed-edition rule is enforced at this source boundary. Actual provisioning/authentication, fsync/crash/concurrency, tests and custodian G-I remain deferred. All reviewers are builder lineage; no independent custodian/live acceptance is claimed.
 
 ## M6 — Dev corpus T03–T06, custodian packet, sealed folder, final docs
 
 | # | Milestone | Item | Inspected file:line | Pass/fail | Reviewer callsign |
 |---|---|---|---|---|---|
-| M6-1 | M6 | Every `.ts` file passes `node --check` | | | |
-| M6-2 | M6 | T03–T06 meet every M3 per-task item (M3-1 … M3-15) | | | |
-| M6-3 | M6 | Dev strata 2 feature / 2 refactor / 2 bugfix | | | |
-| M6-4 | M6 | 48 dev requirements with unique anchors across all six tasks | | | |
-| M6-5 | M6 | Conditions 6b–6f hold for T03–T06 by reading | | | |
-| M6-6 | M6 | Custodian packet contains no held-out content | | | |
-| M6-7 | M6 | Custodian packet states builder lineage may not author held-out data | | | |
-| M6-8 | M6 | Custodian packet states the three custodian phases with timing relative to G-I, T1 and the recipe freeze | | | |
-| M6-9 | M6 | README lists exactly what has and has not run | | | |
+| M6-1 | M6 | Every `.ts` file passes `node --check` | tasks/dev/T03..T06/**/*.ts; outer agentops/reviews/M6-parent-static-source.json:5-12 (116 parsed files, exit 0, parent 0910 attributed receipt; not rerun) | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
+| M6-2 | M6 | T03–T06 meet every M3 per-task item (M3-1 … M3-15) | tasks/dev/T03..T06/task.json:1; spec.md:1-53; brief.md:1-3; repo/src/*:1; hidden/_c0.ts:3-10 and R1..R8.test.ts:5-10; oracle/, mutants/, alternates/; detailed per-item trace in outer agentops/reviews/M6-codex-r1.md | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
+| M6-3 | M6 | Dev strata 2 feature / 2 refactor / 2 bugfix | tasks/dev/T01..T06/task.json:5 (T01/T05 feature; T03/T04 refactor; T02/T06 bugfix) | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
+| M6-4 | M6 | 48 dev requirements with unique anchors across all six tasks | tasks/dev/T01..T06/task.json requirements; outer agentops/reviews/M6-parent-static-source.json:20-26 (48, no cross-requirement duplicate anchor strings; attributed 0910 source inspection) | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
+| M6-5 | M6 | Conditions 6b–6f hold for T03–T06 by reading | tasks/dev/T03..T06/spec.md:11,17,23,29,35,41,47,53; brief.md:1-3; task.json requirements[].decoys (611/822); semicolon before old/obsolete clause at :29/:53 | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
+| M6-6 | M6 | Custodian packet contains no held-out content | docs/CUSTODIAN-PACKET.md:1-34; heldout.schema.json:1-30 (metadata/instructions only; no sealed-folder access) | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
+| M6-7 | M6 | Custodian packet states builder lineage may not author held-out data | docs/CUSTODIAN-PACKET.md:3-5,23-25,29,34; docs/DATA.md:56-60 (Claude/GPT successors and children all builder lineage) | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
+| M6-8 | M6 | Custodian packet states the three custodian phases with timing relative to G-I, T1 and the recipe freeze | docs/CUSTODIAN-PACKET.md:11-25 (phase1 before G-I/live; phase2 after T1; phase3 after G-C/recipe freeze); :16 matcher freeze before single sealed evaluation | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
+| M6-9 | M6 | README lists exactly what has and has not run | README.md:3-5,43-56,78-81; BOLT-HANDOFF.md:14-15,24,72; docs/DEFERRED-VALIDATION.md:1-6,45-58 (source/static checks only; runtime remains unverified) | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
+
+Separate Medium source review: **PASS for Dirty Mode construction; runtime unverified**. Reviewer is builder lineage, not independent custodian validation. Attributed parent syntax/source receipts are distinguished from this reviewer’s own hand traces. README milestone-table finalization remains the parent’s bounded integration step after the separate M2/M4/M5 reviews; no runtime or measured acceptance follows.

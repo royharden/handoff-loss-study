@@ -1,7 +1,7 @@
 # Sandbox
 
 > M4 source constructed in Dirty Mode. **No image has been built and no container has run.**
-> Containment, protocol, cleanup and runtime behavior remain unverified; see DEFERRED-M4.md.
+> Containment, protocol, cleanup and runtime behavior remain unverified; see DEFERRED-VALIDATION.md (M4 section).
 
 ## Boundary (D17)
 
