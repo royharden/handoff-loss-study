@@ -129,10 +129,10 @@ builder chose the reading that resolves away from `evidence`. Codes I1–I8 are 
    lines and blank lines) when it ends in `:`; a heading stops the search. List-item starts are line starts.
 3. **I3** A line inherits the nearest heading strictly above it (a heading line inherits the previous one).
 4. **I4** An occurrence overlapping several clauses is marked if any is marked.
-5. **I5** `entity_cue`: the cue must be in the anchor's own clause for `positive`; markers and `not`/`never`
-   are looked for in the clause plus its inherited heading/intro; the state cue that triggers the negation
-   rule must be in the clause itself ("# Protected files" above "Do not modify src/contracts.ts." stays
-   positive). Cue only in the heading/intro -> `unknown`. An anchor in a `prohibitions[]` element that fails
+5. **I5** `entity_cue`: cues, state cues, markers and `not`/`never` are looked for in the anchor's clause
+   plus its inherited heading/intro (§4.4–§4.6.2). An inherited prohibition cue can give `positive`;
+   an inherited state cue triggers the negation rule across all parts ("# Protected files" above
+   "Do not modify src/contracts.ts." gives `unknown`). An anchor in a `prohibitions[]` element that fails
    the positive rules -> `unknown`.
 6. **I6** Several entity anchors combine like secret groups.
 7. **I7** `secret_anchor` reads only secret anchors, `entity_cue` only entity anchors.

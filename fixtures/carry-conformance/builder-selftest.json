@@ -486,8 +486,8 @@
       "requirementKind": "do_not_touch",
       "anchors": [{ "type": "entity", "alternates": ["src/contracts.ts"] }],
       "decoys": [],
-      "expectedLexicalState": "unknown",
-      "note": "Builder choice I5: the cue 'do not' is only in the inherited list intro, not in the anchor's own clause -> unknown (resolves away from evidence)."
+      "expectedLexicalState": "evidence",
+      "note": "4.4/4.6.2 the anchor clause inherits the list intro's prohibition cue 'do not'; its 'not' is excused and no state cue or other marker occurs -> positive -> evidence."
     },
     {
       "id": "B45-malformed-brief-matched-as-prose",
@@ -684,8 +684,8 @@
       "requirementKind": "do_not_touch",
       "anchors": [{ "type": "entity", "alternates": ["src/contracts.ts"] }],
       "decoys": [],
-      "expectedLexicalState": "unknown",
-      "note": "Builder choice I5: the cue is only in the inherited heading -> unknown."
+      "expectedLexicalState": "evidence",
+      "note": "4.4/4.6.2 the anchor clause inherits the heading's prohibition cue 'do not'; its 'not' is excused and no state cue or other marker occurs -> positive -> evidence."
     },
     {
       "id": "B63-entity-heading-state-word-does-not-void",
@@ -695,8 +695,8 @@
       "requirementKind": "do_not_touch",
       "anchors": [{ "type": "entity", "alternates": ["src/contracts.ts"] }],
       "decoys": [],
-      "expectedLexicalState": "evidence",
-      "note": "Builder choice I5: 'protected' is only in the heading, so the state-cue negation rule does not fire; the own clause has 'do not' (excused 'not'); heading has no marker -> positive -> evidence."
+      "expectedLexicalState": "unknown",
+      "note": "4.4/4.6.2 the anchor clause inherits the heading's state cue 'protected'; the own clause has 'not' inside 'do not', so the state-cue negation rule rejects the combined clause -> unknown."
     }
   ]
 }

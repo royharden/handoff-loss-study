@@ -118,9 +118,16 @@ describe('§4.6 checks', () => {
     expect(check('src/contracts.ts is not protected.')).toBe('unknown');
     expect(check('do not leave src/contracts.ts as is')).toBe('unknown');
     expect(check('src/contracts.ts is no longer protected.')).toBe('unknown');
-    expect(check('Do not modify:\n- src/contracts.ts')).toBe('unknown');
-    expect(check('# Protected files\nDo not modify src/contracts.ts.')).toBe('positive');
     expect(check('Module A imports src/contracts.ts.')).toBe('negative');
+  });
+  it('M2-R1: inherits entity cues and state-cue negation from headings and list intros', () => {
+    // SOURCE: frozen PLAN-FINAL.md §4.4 inheritance and §4.6.2 entity_cue; review M2-R1.
+    // Catches own-clause-only cue/state checks that misclassified builder pairs B44, B62 and B63.
+    const check = (text: string) => entityCueCheck([proseDocument(text)], [entity('src/contracts.ts')]);
+    expect(check('Do not modify these files:\n- src/contracts.ts')).toBe('positive');
+    expect(check('# Do not modify\nsrc/contracts.ts')).toBe('positive');
+    expect(check('# Protected files\nDo not modify src/contracts.ts.')).toBe('unknown');
+    expect(check('Protected files:\n- Do not modify src/contracts.ts.')).toBe('unknown');
   });
 });
 

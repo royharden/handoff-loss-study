@@ -157,7 +157,7 @@
     "B41-entity-do-not-modify": { "state": "evidence", "trace": "4.6.2 prohibition cue 'do not' in the anchor's clause; its 'not' is excused; no state cue -> positive -> evidence." },
     "B42-entity-without-cue": { "state": "no_evidence", "trace": "4.6.2 anchor present but no cue in its clause or context -> negative -> no_evidence." },
     "B43-entity-state-cue-unchanged": { "state": "evidence", "trace": "4.6.2 state cue 'unchanged', no marker, no not/never -> positive -> evidence." },
-    "B44-entity-cue-only-in-list-intro": { "state": "unknown", "trace": "Builder choice I5: the cue 'do not' is only in the inherited list intro, not in the anchor's own clause -> unknown (resolves away from evidence)." },
+    "B44-entity-cue-only-in-list-intro": { "state": "evidence", "trace": "4.4/4.6.2 the anchor clause inherits the list intro's prohibition cue 'do not'; its 'not' is excused and no state cue or other marker occurs -> positive -> evidence." },
     "B45-malformed-brief-matched-as-prose": { "state": "evidence", "trace": "4.2 the brief does not parse (truncated JSON), so the raw text is matched as prose; '13000' bounded by ' ' and '.', no marker -> evidence." },
     "B46-brief-values-are-separate-units": { "state": "evidence", "trace": "4.4 each JSON string value is its own clause: requirements value unmarked (hit); decoy only in a decisions_overrides value marked by 'old'/'obsolete' -> evidence." },
     "B47-marker-in-other-brief-value-does-not-mark": { "state": "evidence", "trace": "'never' sits in the objective value; the anchor's value is a separate clause with no marker -> evidence." },
@@ -175,8 +175,8 @@
     "B59-anchor-in-heading-line": { "state": "evidence", "trace": "4.4 a heading line is its own clause and inherits only a heading strictly above it (none here) -> unmarked -> evidence." },
     "B60-entity-must-not": { "state": "evidence", "trace": "4.6.2 prohibition cue 'must not'; its 'not' is excused; no state cue -> positive -> evidence." },
     "B61-entity-never-plus-frozen": { "state": "unknown", "trace": "4.6.2 state cue 'frozen' in the clause, so no not/never may occur anywhere in it, even the prohibition cue 'never' -> unknown." },
-    "B62-entity-cue-only-in-heading": { "state": "unknown", "trace": "Builder choice I5: the cue is only in the inherited heading -> unknown." },
-    "B63-entity-heading-state-word-does-not-void": { "state": "evidence", "trace": "Builder choice I5: 'protected' is only in the heading, so the state-cue negation rule does not fire; the own clause has 'do not' (excused 'not'); heading has no marker -> positive -> evidence." }
+    "B62-entity-cue-only-in-heading": { "state": "evidence", "trace": "4.4/4.6.2 the anchor clause inherits the heading's prohibition cue 'do not'; its 'not' is excused and no state cue or other marker occurs -> positive -> evidence." },
+    "B63-entity-heading-state-word-does-not-void": { "state": "unknown", "trace": "4.4/4.6.2 the anchor clause inherits the heading's state cue 'protected'; the own clause has 'not' inside 'do not', so the state-cue negation rule rejects the combined clause -> unknown." }
   },
   "controlTask": {
     "dir": "fixtures/control-task/T80",

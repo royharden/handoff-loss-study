@@ -8,7 +8,7 @@
  * anchor/decoy occurrences at token boundaries on the unsplit normalised text (§4.3) -> marked/unmarked
  * (§4.5) -> the three checks (§4.6) -> evidence state per eligible edge (§4.7).
  *
- * Builder interpretation choices (each resolves away from `evidence`; listed in docs/DESIGN.md §7):
+ * Builder implementation choices (listed in docs/DESIGN.md §7):
  *   I1 Clause boundaries (§4.4) apply inside every carrier document, including each fixed-brief JSON
  *      string value; a JSON string value is its own document, so headings/list intros never cross values.
  *   I2 A list-item start is always a line start, so it coincides with the line boundary. A line is in a
@@ -18,11 +18,10 @@
  *   I3 The inherited heading of a line is the nearest heading line strictly above it (any level).
  *   I4 An occurrence that overlaps several clauses is marked if any of them is marked; an occurrence
  *      overlapping no clause (it consists only of `;`) counts as marked.
- *   I5 entity_cue: the cue must occur in the anchor occurrence's own clause for `positive`; markers and
- *      `not`/`never` are looked for in the clause together with its inherited heading and list intro (as
- *      §4.5 does for marking), while the state cue that triggers the negation rule must be in the clause
- *      itself. A cue present only in the inherited heading or
- *      list intro gives `unknown`; an anchor inside a `prohibitions[]` element that does not meet the
+ *   I5 entity_cue: cues, state cues, markers and `not`/`never` are looked for in the anchor occurrence's
+ *      clause together with its inherited heading and list intro (§4.4–§4.6.2). A state cue in any of
+ *      these parts triggers the negation rule across all parts, including prohibition-cue negation.
+ *      An anchor inside a `prohibitions[]` element that does not meet the
  *      positive rules gives `unknown` (the element itself carries prohibition meaning).
  *   I6 Several entity anchors on one do_not_touch requirement combine like secret groups (all positive ->
  *      positive; some negative and none unknown -> negative; otherwise unknown). Each anchor is positive
@@ -320,14 +319,14 @@ function hasAnyCue(normalizedText: string): boolean {
 /**
  * §4.6.2 conditions on a clause that holds the anchor and a cue: no marker other than a `not`/`never`
  * inside a matched prohibition cue; and if the clause contains any state cue, no `not`/`never` anywhere
- * (even inside a prohibition cue). Markers and negations are looked for in the clause and its inherited
- * heading/intro (I5); the state cue that triggers the negation rule must be in the clause itself, so a
- * heading such as "# Protected files" above "Do not modify src/contracts.ts" does not void the cue.
+ * (even inside a prohibition cue). Cues, state cues, markers and negations are looked for in the clause
+ * and its inherited heading/intro (§4.4, I5).
  */
 export function cueClauseAcceptable(clause: Clause): boolean {
-  const anyState = cueSpans(clause.text).state.length > 0;
+  const parts = [clause.text, ...clause.context];
+  const anyState = parts.some((part) => cueSpans(part).state.length > 0);
   let anyNegation = false;
-  for (const part of [clause.text, ...clause.context]) {
+  for (const part of parts) {
     const cues = cueSpans(part);
     for (const m of markerSpans(part)) {
       const isNegation = (NEGATION_MARKERS as readonly string[]).includes(m.phrase);
@@ -358,8 +357,7 @@ function entityOccurrence(doc: CarrierDoc, anchor: string, at: number): CheckRes
   }
   const clause = clauseAt(doc, at);
   if (clause === undefined) return 'unknown';
-  if (hasAnyCue(clause.text)) return cueClauseAcceptable(clause) ? 'positive' : 'unknown';
-  if (clause.context.some(hasAnyCue)) return 'unknown';
+  if ([clause.text, ...clause.context].some(hasAnyCue)) return cueClauseAcceptable(clause) ? 'positive' : 'unknown';
   if (doc.prohibitionElement) return 'unknown';
   return 'negative';
 }
