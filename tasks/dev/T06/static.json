@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "protectedFiles": [
+    {
+      "path": "src/credit-contract.ts",
+      "sha256": "c7280114741585697bcd746bad9ce46a08bee81fbbb4dddf4518edefec809306"
+    }
+  ],
+  "forbiddenIdentifiers": [
+    {
+      "identifier": "eval",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "Function",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "process",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "require",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "globalThis",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    }
+  ]
+}

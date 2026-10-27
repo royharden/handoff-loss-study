@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "protectedFiles": [
+    {
+      "path": "src/ticket-contract.ts",
+      "sha256": "5e4799d8df81ae62cdfea097927cc7a22348dc91c9a8a7984067cab09cb5d8b6"
+    }
+  ],
+  "forbiddenIdentifiers": [
+    {
+      "identifier": "eval",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "Function",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "process",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "require",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "globalThis",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    }
+  ]
+}

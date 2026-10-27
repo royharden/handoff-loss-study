@@ -1,0 +1,3 @@
+Provide the manifest projection over an array of entries. Each entry has an id, amount and string metadata.
+`summarize(entries)` in `src/parcel-values.ts` returns the entry count, the sum of their amounts and their ids in input order. Empty input gives count zero, total zero and an empty id array. Negative amounts participate in the sum. Input arrays and entries stay immutable.
+`coreKey(entry)` in each writable module returns the entry id verbatim. `displaySummary(entries)` in `src/parcel-view.ts` returns the count and total from the summary as a string joined by a colon. Public helper exports retain their declared signatures.

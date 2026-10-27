@@ -53,3 +53,8 @@ the owner's confirmation required by G-A.
 4. Roy confirms rights and originality in writing (Q2).
 
 If G-A fails, S42 is skipped, not downgraded. No task is admitted and nothing executes before G-A.
+
+## Development corpus completion — 2026-10-27
+T03 (refactor, parcel manifest), T04 (refactor, support ticket projection), T05 (feature, inventory transfer), T06 (bugfix, subscription credit statement) are original synthetic development tasks authored by 0910_Codex_gpt-61-sol_N20CodexInt42 under MIT. Each includes starter, spec/brief, builder-written dev expectations, oracle, eight isolated mutant overlays and two alternate solutions. Their schema, clause, anchor and C0 expectations are source-inspection claims only; no task has executed. These four tasks share a projection scaffold; generalization across wider software domains remains limited.
+
+Custodian appointment, rights confirmation and owner spot-checks are PENDING. Claude and Codex successor builders and their children are all builder lineage. No semantic/gold labels or held-out tasks have been authored by this construction team. See CUSTODIAN-PACKET.md for the three independent phases and heldout.schema.json for metadata shape. G-A/G-I/G-C remain unpassed.

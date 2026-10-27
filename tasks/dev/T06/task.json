@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "id": "T06",
+  "split": "dev",
+  "shape": "bugfix",
+  "title": "Repair the subscription credit statement",
+  "author": {
+    "lineage": "builder",
+    "name": "0910_Codex_gpt-61-sol_N20CodexInt42"
+  },
+  "modules": {
+    "A": {
+      "path": "src/credit-values.ts"
+    },
+    "B": {
+      "path": "src/credit-view.ts"
+    }
+  },
+  "protectedInterface": "src/credit-contract.ts",
+  "publicTests": [
+    "tests/smoke.test.ts"
+  ],
+  "slices": {
+    "A": {
+      "headings": [
+        "# Objective",
+        "# Requirement R2",
+        "# Requirement R4",
+        "# Requirement R7",
+        "# Final service clarification"
+      ]
+    },
+    "B": {
+      "headings": [
+        "# Requirement R1",
+        "# Requirement R3",
+        "# Requirement R6",
+        "# Requirement R8"
+      ]
+    }
+  },
+  "slotAssignment": {
+    "input": "T06:1",
+    "sha256": "035c9923b4d3d08b370b40a52cd38b5ddd826f00dbb5b743e001f6b4189c9fd8",
+    "rule": "docs/TASK-RECIPE.md#slot-assignment v1"
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "kind": "negative_constraint",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R1",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "billingAuditSecret"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`billingAuditSecret` is stripped by `publicFields(fields)`. All remaining key/value pairs survive and the input object stays intact."
+    },
+    {
+      "id": "R2",
+      "kind": "literal_constant",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R2",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "credit-lane-p2"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`routingLane()` returns the exact literal `credit-lane-p2`."
+    },
+    {
+      "id": "R3",
+      "kind": "naming_convention",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R3",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "credit.statement.ready"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`eventName()` follows the dotted lowercase naming convention `credit.statement.ready`."
+    },
+    {
+      "id": "R4",
+      "kind": "override_default",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R4",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "5749"
+          ]
+        }
+      ],
+      "decoys": [
+        "611"
+      ],
+      "couplings": [],
+      "summary": "`baseQuota()` returns 5749, the service override; the old shared base of 611 is obsolete."
+    },
+    {
+      "id": "R5",
+      "kind": "late_clarification",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R5",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "42757"
+          ]
+        }
+      ],
+      "decoys": [
+        "822"
+      ],
+      "couplings": [],
+      "summary": "`capQuota(n)` clamps a nonnegative amount to the service ceiling. The final service ceiling is 42757; the old shared ceiling of 822 is obsolete."
+    },
+    {
+      "id": "R6",
+      "kind": "cross_module_contract",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R6",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "credit-key-v9"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`linkedRecord(entry)` obtains its key through the peer module coreKey(entry) and returns the cross-module scheme `credit-key-v9` together with that key. The peer owns identifier extraction; the receiving module owns the envelope."
+    },
+    {
+      "id": "R7",
+      "kind": "do_not_touch",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R7",
+      "anchors": [
+        {
+          "type": "entity",
+          "alternates": [
+            "src/credit-contract.ts"
+          ],
+          "cue": "unchanged"
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`src/credit-contract.ts` stays unchanged. Operational overrides are implemented in the writable modules."
+    },
+    {
+      "id": "R8",
+      "kind": "edge_case",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R8",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "empty-statement-p2"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`emptyLabel(ids)` returns `empty-statement-p2` for an empty id list and joins a populated list with a comma."
+    }
+  ]
+}
