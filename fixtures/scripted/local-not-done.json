@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "local-not-done",
+  "edition": "SYNTHETIC",
+  "tranche": "FIXTURE",
+  "provider": "scripted",
+  "path": "local_not_done",
+  "description": "context/free_summary: local_A requirement R1 fails in module A's own slice (no edge); all nine groups graded.",
+  "arm": "context/free_summary",
+  "requirements": [{"id":"R1","kind":"negative_constraint","slot":"local_A","sourceSlice":"A","responsibleWriter":"A","testGroup":"R1","anchors":[{"type":"secret","alternates":["clockPort.now"]}],"decoys":[],"couplings":[],"summary":"read time only through clockPort.now"}],
+  "view": {"spec":null,"slices":null},
+  "carriers": [{"handoffId":"h1","from":"context_B","to":"context_A","deliveredAtSeq":4,"channel":"free_summary","text":"Module B is the retry client."}],
+  "lastEdits": [{"worker":"context_A","seq":9},{"worker":"context_B","seq":9}],
+  "groups": {"C0":true,"R1":false,"R2":true,"R3":true,"R4":true,"R5":true,"R6":true,"R7":true,"R8":true},
+  "status": "completed",
+  "budget": null,
+  "scripted": [{"worker":"context_A","completions":[{"message":{"text":"","toolCalls":[{"id":"p1","name":"submit_handoff","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]},{"worker":"context_B","completions":[{"message":{"text":"","toolCalls":[{"id":"i1","name":"finish","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]}],
+  "writeRefusals": [],
+  "requests": []
+}

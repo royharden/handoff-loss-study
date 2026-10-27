@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "edition": "SYNTHETIC",
+  "lineage": "builder",
+  "note": "Builder hand traces (0846_Claude_Opus55_Sub_S42CoderM2) of every scripted fixture, builder self-test pair, the control task and each planted bad task against PLAN.md section 4 and section 3 as implemented in src/score and src/tasks. These are mechanics expectations, NOT semantic or gold labels. Never executed during Dirty Mode construction; `hls selftest` / `hls fixture` compare them (docs/DEFERRED-VALIDATION.md DV-M2-01..03).",
+  "fixtures": {
+    "kept": {
+      "path": "kept", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R5": { "class": "kept", "flags": [], "state": "evidence", "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "role arm -> R5 eligible; implementer last edit seq 9 > delivery seq 5 so h1 counts; brief parses; requirements value 'Set retryCeiling to 13000.' unmarked -> secret hit -> positive; decoy 9000 absent -> evidence; R5 passed -> kept, no flag. Usage 2 x (1000+100) = 2200."
+    },
+    "kept-without-lexical-evidence": {
+      "path": "kept_without_lexical_evidence", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R5": { "class": "kept", "flags": ["kept_without_lexical_evidence"], "state": "no_evidence", "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "summary has no '13000' -> group absent -> negative -> no_evidence; passed -> kept + kept_without_lexical_evidence (4.9)."
+    },
+    "failed-with-evidence": {
+      "path": "failed_with_evidence", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R5": { "class": "failed_with_evidence", "flags": [], "state": "evidence", "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "same brief as 'kept' -> evidence; R5 failed -> failed_with_evidence."
+    },
+    "failed-without-lexical-evidence": {
+      "path": "failed_without_lexical_evidence", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R5": { "class": "failed_without_lexical_evidence", "flags": [], "state": "no_evidence", "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "summary names only the decoy ('retryCeiling: 9000'); '13000' absent -> negative -> no_evidence (decoy_conflict is true but 4.7 gives no_evidence when P is negative); failed -> failed_without_lexical_evidence."
+    },
+    "attribution-unknown-decoy": {
+      "path": "attribution_unknown via decoy", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R6": { "class": "attribution_unknown", "flags": [], "state": "unknown", "unknownReason": "decoy_conflict" } },
+      "contractMismatches": ["R6"], "retention": null, "visibility": [],
+      "trace": "context arm, R6 transfer_A_to_B -> eligible, writer context_B received h1 at seq 4 < last edit 9; interfaces value has 'X-Bucket-Id' unmarked -> positive; decisions_overrides value has decoy 'X-Bucket-Key' with no marker -> decoy_conflict -> unknown(decoy_conflict); failed -> attribution_unknown. cross_module_contract failed with C0 passed -> contract mismatch R6."
+    },
+    "attribution-unknown-missing-artifact": {
+      "path": "attribution_unknown via missing artifact", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R5": { "class": "attribution_unknown", "flags": [], "state": "unknown", "unknownReason": "missing_artifact" } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "no carrier delivered to the implementer -> 4.7 missing artifact -> unknown(missing_artifact); failed -> attribution_unknown."
+    },
+    "attribution-unknown-prerequisite": {
+      "path": "attribution_unknown via failed prerequisite", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R2": { "class": "attribution_unknown", "flags": [], "state": "unknown", "unknownReason": "prerequisite_failed" } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "R2 couples to R1 as prerequisite and group R1 failed -> unknown(prerequisite_failed) even though the brief carries '4096' unmarked (secretAnchor positive); failed -> attribution_unknown."
+    },
+    "attribution-unknown-marked-only": {
+      "path": "attribution_unknown via anchor only in a negated/obsolete clause", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R5": { "class": "attribution_unknown", "flags": [], "state": "unknown", "unknownReason": "check_unknown" } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "line 1 has marker 'not', line 2 has marker 'old'; both '13000' occurrences marked -> marked-only -> secret_anchor unknown -> unknown(check_unknown); failed -> attribution_unknown."
+    },
+    "entity-without-cue": {
+      "path": "entity-without-cue", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R7": { "class": "failed_without_lexical_evidence", "flags": [], "state": "no_evidence", "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "do_not_touch -> P = entity_cue; 'src/contracts.ts' occurs only as a files_touched value with no cue (not a prohibitions element, no context) -> negative -> no_evidence; failed -> failed_without_lexical_evidence."
+    },
+    "local-not-done": {
+      "path": "local_not_done", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R1": { "class": "local_not_done", "flags": [], "state": null, "unknownReason": null } },
+      "contractMismatches": [], "retention": 0.875, "visibility": [],
+      "trace": "context arm, R1 local_A -> no eligible edge -> no evidence; failed -> local_not_done. All eight R groups graded, 7 pass -> retention 7/8 = 0.875."
+    },
+    "contract-mismatch": {
+      "path": "contract mismatch", "status": "completed", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R6": { "class": "failed_with_evidence", "flags": [], "state": "evidence", "unknownReason": null } },
+      "contractMismatches": ["R6"], "retention": null, "visibility": [],
+      "trace": "summary 'Module B must send the header X-Bucket-Id with every call.' has no marker -> positive; decoy absent -> evidence; failed -> failed_with_evidence; cross_module_contract failed with C0 passed -> contract mismatch R6."
+    },
+    "malformed-brief": {
+      "path": "malformed brief", "status": "completed", "exclusion": null, "flags": ["malformed_handoff"], "spentTokens": 2200,
+      "requirements": { "R5": { "class": "kept", "flags": [], "state": "evidence", "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "raw brief is not JSON -> malformed_handoff flag; matched as prose (4.2): '13000' at end of text, unmarked -> evidence; passed -> kept."
+    },
+    "cap-hit": {
+      "path": "cap hit", "status": "cap_hit", "exclusion": null, "flags": ["ledger_retry_used"], "spentTokens": 135000,
+      "requirements": { "R5": { "class": "single_not_done", "flags": [], "state": null, "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "spent 120000 + 15000 = 135000; 135000 + pending 20000 > 150000 -> cap_hit consistent; retries 1 -> ledger_retry_used; cap hits are outcomes, not exclusions; single arm -> failed -> single_not_done."
+    },
+    "usage-unknown": {
+      "path": "usage_unknown", "status": "usage_unknown", "exclusion": "usage_unknown", "flags": [], "spentTokens": 4500,
+      "requirements": {},
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "second completion has usage source 'unknown' -> status usage_unknown required (consistent) -> exclusion usage_unknown; groups null -> no scores; spent 4000 + 500 + 0 = 4500 (the M4 ledger additionally books the reservation)."
+    },
+    "refused-out-of-module-write": {
+      "path": "refused out-of-module write", "status": "completed", "exclusion": null, "flags": ["out_of_module_write_refused"], "spentTokens": 2200,
+      "requirements": { "R1": { "class": "kept", "flags": [], "state": null, "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "a write refusal with reason out_of_module -> flag out_of_module_write_refused (not an exclusion); R1 local_A, no edge; passed -> kept."
+    },
+    "visibility-leak": {
+      "path": "visibility leak", "status": "completed", "exclusion": "visibility_leak", "flags": ["visibility_leak"], "spentTokens": 2200,
+      "requirements": { "R5": { "class": "kept", "flags": ["kept_without_lexical_evidence"], "state": "no_evidence", "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [{ "finding": "visibility_leak", "requirement": "R5", "anchor": "13000" }],
+      "trace": "implementer may hold only received handoffs (the spec is not its material); h1 lacks '13000'; a tool_result segment (non-self) holds '13000' -> visibility_leak -> excluded; brief lacks '13000' -> no_evidence; passed -> kept + kept_without_lexical_evidence."
+    },
+    "self-originated-anchor": {
+      "path": "self-originated anchor (not a leak)", "status": "completed", "exclusion": null, "flags": ["self_originated_anchor"], "spentTokens": 1100,
+      "requirements": { "R5": { "class": "kept", "flags": [], "state": null, "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [{ "finding": "self_originated_anchor", "requirement": "R5", "anchor": "13000" }],
+      "trace": "spec_blind has no legitimate source for '13000'; it appears only in a self/own_file_read segment -> self_originated_anchor, never a leak, no exclusion; spec_blind uses the single row -> passed -> kept."
+    },
+    "worker-crash": {
+      "path": "worker crash", "status": "worker_crash", "exclusion": null, "flags": [], "spentTokens": 2200,
+      "requirements": { "R5": { "class": "failed_with_evidence", "flags": [], "state": "evidence", "unknownReason": null } },
+      "contractMismatches": [], "retention": null, "visibility": [],
+      "trace": "worker_crash is not an exclusion; the snapshot is graded as left; summary 'Set retryCeiling to 13000.' -> evidence; failed -> failed_with_evidence."
+    }
+  },
+  "carrySelftest": {
+    "B01-dotted-anchor": { "state": "evidence", "trace": "4.3 dotted anchor matches whole: before ' ', after ' '; clause has no marker -> hit -> positive; no decoy -> evidence." },
+    "B02-dotted-anchor-prefix-of-identifier": { "state": "no_evidence", "trace": "4.3 the only candidate is followed by 'M' (word char) -> no occurrence -> absent -> negative -> no_evidence." },
+    "B03-colon-anchor": { "state": "evidence", "trace": "4.3 'retryCeiling: 13' matches whole (before ' ', after ' '); ':' is not a clause boundary (4.4); no marker -> evidence." },
+    "B04-13-inside-1379": { "state": "no_evidence", "trace": "4.3 '13' inside '1379' is followed by '7' (word char) -> no occurrence -> absent -> no_evidence." },
+    "B05-13-standalone": { "state": "evidence", "trace": "Control for B04: '13' between spaces -> hit in an unmarked clause -> evidence." },
+    "B06-comma-negation-one-line": { "state": "unknown", "trace": "4.4 ',' is not a boundary, so the whole line is one clause containing marker 'not' -> marked-only -> unknown." },
+    "B07-dont-list-intro": { "state": "unknown", "trace": "4.1 Don't -> 'Do not:'; 4.4 the list item inherits its list intro 'Do not:' (line ending in ':' directly above the list) which has 'not' -> marked-only -> unknown." },
+    "B08-curly-dont": { "state": "unknown", "trace": "4.1 curly U+2019 folds to ', then n't -> ' not': 'Do not set ...' -> marker 'not' -> marked-only -> unknown." },
+    "B09-old-draft-value-wrong": { "state": "unknown", "trace": "4.5 markers 'old' and 'wrong' in the clause -> marked-only -> unknown." },
+    "B10-eg-13": { "state": "unknown", "trace": "4.5 marker 'e.g.' (whole word, bounded by spaces) -> marked-only -> unknown." },
+    "B11-entity-no-longer-protected": { "state": "unknown", "trace": "4.6.2 anchor + state cue 'protected' in one clause, but marker 'no longer' is not an excused not/never -> clause fails -> unknown." },
+    "B12-entity-in-prohibitions-without-cue": { "state": "evidence", "trace": "4.6.2 prohibitions[] element equals the entity anchor after normalisation and has no marker -> positive -> evidence." },
+    "B13-decoy-in-marked-clause": { "state": "evidence", "trace": "Anchor hit on line 1 (unmarked); 4.6.3 the decoy occurs only on line 2, marked by 'old'/'obsolete' -> no decoy_conflict -> evidence." },
+    "B14-decoy-unmarked": { "state": "unknown", "trace": "Anchor hit, decoy in an unmarked clause -> decoy_conflict -> 4.7 positive + conflict -> unknown." },
+    "B15-combination-absent-plus-marked-only": { "state": "unknown", "trace": "4.6.1 group 4096 absent, group 7331 marked-only ('never') -> some absent but one marked-only -> unknown." },
+    "B16-combination-hit-plus-absent": { "state": "no_evidence", "trace": "4.6.1 group 4096 hit, group 7331 absent, none marked-only -> negative -> no_evidence." },
+    "B17-combination-hit-plus-hit": { "state": "evidence", "trace": "4.6.1 every group hit -> positive -> evidence." },
+    "B18-combination-hit-plus-marked-only": { "state": "unknown", "trace": "4.6.1 group 4096 hit, group 7331 marked-only -> not all hit, none absent -> unknown." },
+    "B19-entity-is-not-protected": { "state": "unknown", "trace": "4.6.2 state cue 'protected' with 'not' outside any prohibition cue (and state-cue negation rule) -> clause fails -> unknown." },
+    "B20-entity-do-not-leave-as-is": { "state": "unknown", "trace": "4.6.2 the clause has state cue 'leave ... as is', so no not/never may occur, even inside the prohibition cue 'do not' -> clause fails -> unknown." },
+    "B21-cannot-use": { "state": "unknown", "trace": "4.1 cannot -> 'can not'; marker 'not' -> marked-only -> unknown." },
+    "B22-do-not-use-quoted": { "state": "unknown", "trace": "Quote characters are token boundaries but never clause boundaries (4.4); clause has 'not' -> marked-only -> unknown." },
+    "B23-secret-in-prohibitions": { "state": "unknown", "trace": "4.5 every prohibitions[] element is a marked clause for secret anchors; the anchor occurs only there -> marked-only -> unknown." },
+    "B24-full-trace-tool-result-decoy-ignored": { "state": "evidence", "trace": "4.2 tool_result messages are not carriers, so the starter default 9000 is ignored; spec_text hit -> evidence." },
+    "B25-full-trace-assistant-decoy-counts": { "state": "unknown", "trace": "Control for B24: assistant messages are carriers; decoy unmarked there -> decoy_conflict -> unknown." },
+    "B26-snake-case-emphasis-stripped": { "state": "evidence", "trace": "4.1 the outer '_' pair delimits emphasis at word boundaries and is stripped; the inner '_' (preceded by 'y') is kept -> 'retry_ceiling.' -> hit -> evidence." },
+    "B27-snake-case-inside-longer-identifier": { "state": "no_evidence", "trace": "No emphasis delimiter (underscores are inside the identifier); 'retry_ceiling' is followed by '_' (word char) -> absent -> no_evidence." },
+    "B28-bold-anchor": { "state": "evidence", "trace": "4.1 '**' emphasis stripped -> 'Set the ceiling to 13000.' -> hit -> evidence." },
+    "B29-backticks-stripped": { "state": "evidence", "trace": "4.1 backticks stripped -> hit -> evidence." },
+    "B30-heading-inheritance-marked": { "state": "unknown", "trace": "4.4 the clause inherits heading '# Obsolete values' (marker 'obsolete', case-insensitive) -> marked-only -> unknown." },
+    "B31-nearest-heading-wins": { "state": "evidence", "trace": "4.4 only the NEAREST preceding heading is inherited: '## Current values' (no marker), not '# Old notes' -> hit -> evidence." },
+    "B32-semicolon-boundary": { "state": "evidence", "trace": "4.4 ';' splits: clause 1 'Do not use 9000' is marked (decoy marked, no conflict); clause 2 ' use 13000.' unmarked -> hit -> evidence." },
+    "B33-period-not-a-boundary": { "state": "unknown", "trace": "4.4 '.' is never a boundary: one clause with marker 'old' -> anchor marked-only -> unknown." },
+    "B34-paraphrase-miss": { "state": "no_evidence", "trace": "Paraphrase without the anchor -> absent -> no_evidence (a disclosed lexical limit, 4.8)." },
+    "B35-previously": { "state": "unknown", "trace": "4.5 marker 'previously' -> marked-only -> unknown." },
+    "B36-instead-of": { "state": "unknown", "trace": "4.5 marker 'instead of' marks the whole line, anchor included -> marked-only -> unknown (disclosed recall limit, 4.8)." },
+    "B37-no-longer": { "state": "unknown", "trace": "4.5 marker 'no longer' -> marked-only -> unknown." },
+    "B38-deprecated": { "state": "unknown", "trace": "4.5 marker 'deprecated' -> marked-only -> unknown." },
+    "B39-formerly": { "state": "unknown", "trace": "4.5 marker 'formerly' (case-insensitive) -> marked-only -> unknown." },
+    "B40-previous": { "state": "unknown", "trace": "4.5 marker 'previous' -> marked-only -> unknown." },
+    "B41-entity-do-not-modify": { "state": "evidence", "trace": "4.6.2 prohibition cue 'do not' in the anchor's clause; its 'not' is excused; no state cue -> positive -> evidence." },
+    "B42-entity-without-cue": { "state": "no_evidence", "trace": "4.6.2 anchor present but no cue in its clause or context -> negative -> no_evidence." },
+    "B43-entity-state-cue-unchanged": { "state": "evidence", "trace": "4.6.2 state cue 'unchanged', no marker, no not/never -> positive -> evidence." },
+    "B44-entity-cue-only-in-list-intro": { "state": "unknown", "trace": "Builder choice I5: the cue 'do not' is only in the inherited list intro, not in the anchor's own clause -> unknown (resolves away from evidence)." },
+    "B45-malformed-brief-matched-as-prose": { "state": "evidence", "trace": "4.2 the brief does not parse (truncated JSON), so the raw text is matched as prose; '13000' bounded by ' ' and '.', no marker -> evidence." },
+    "B46-brief-values-are-separate-units": { "state": "evidence", "trace": "4.4 each JSON string value is its own clause: requirements value unmarked (hit); decoy only in a decisions_overrides value marked by 'old'/'obsolete' -> evidence." },
+    "B47-marker-in-other-brief-value-does-not-mark": { "state": "evidence", "trace": "'never' sits in the objective value; the anchor's value is a separate clause with no marker -> evidence." },
+    "B48-decoy-in-prohibitions-is-marked": { "state": "evidence", "trace": "4.5 prohibitions[] elements are marked for decoys too -> no decoy_conflict; anchor hit in requirements -> evidence." },
+    "B49-entity-prohibitions-anchor-then-cue": { "state": "evidence", "trace": "4.6.2 the element is '<anchor>' followed only by a cue ('read-only') and has no marker -> positive -> evidence." },
+    "B50-entity-prohibitions-with-marker": { "state": "unknown", "trace": "4.6.2 element is not anchor-only/anchor+cue and contains marker 'old'; no cue in the clause; builder choice I5: an anchor in a prohibitions[] element that fails the positive rules -> unknown." },
+    "B51-entity-do-not-worry-limit": { "state": "evidence", "trace": "Mechanics of a DISCLOSED false-evidence limit (4.8): prohibition cue 'do not' with a different object still satisfies the lexical rule -> positive -> evidence." },
+    "B52-marker-case-insensitive": { "state": "unknown", "trace": "4.1 markers match case-insensitively: 'NEVER' -> marked-only -> unknown." },
+    "B53-examples-is-not-a-marker": { "state": "evidence", "trace": "Markers are whole words: 'examples' is not 'example' -> clause unmarked -> evidence." },
+    "B54-nothing-is-not-not": { "state": "evidence", "trace": "'Nothing' does not contain the whole word 'not' -> unmarked -> evidence." },
+    "B55-full-width-digits-nfkc": { "state": "evidence", "trace": "4.1 NFKC folds full-width digits to '13000' -> hit -> evidence." },
+    "B56-list-without-colon-intro-limit": { "state": "evidence", "trace": "Mechanics of a DISCLOSED false-evidence limit (4.8): the line above the list does not end in ':' so it is not a list intro; the item clause is unmarked -> evidence." },
+    "B57-anchor-case-sensitive": { "state": "no_evidence", "trace": "4.1 identifiers stay case-sensitive: 'RetryWithJitter' is not 'retryWithJitter' -> absent -> no_evidence." },
+    "B58-verbatim-forward-slice": { "state": "evidence", "trace": "Verbatim-forward shape of a 6b/6c-compliant slice: anchor unmarked (heading '# Module B' has no marker), decoy only in a marked line -> evidence." },
+    "B59-anchor-in-heading-line": { "state": "evidence", "trace": "4.4 a heading line is its own clause and inherits only a heading strictly above it (none here) -> unmarked -> evidence." },
+    "B60-entity-must-not": { "state": "evidence", "trace": "4.6.2 prohibition cue 'must not'; its 'not' is excused; no state cue -> positive -> evidence." },
+    "B61-entity-never-plus-frozen": { "state": "unknown", "trace": "4.6.2 state cue 'frozen' in the clause, so no not/never may occur anywhere in it, even the prohibition cue 'never' -> unknown." },
+    "B62-entity-cue-only-in-heading": { "state": "unknown", "trace": "Builder choice I5: the cue is only in the inherited heading -> unknown." },
+    "B63-entity-heading-state-word-does-not-void": { "state": "evidence", "trace": "Builder choice I5: 'protected' is only in the heading, so the state-cue negation rule does not fire; the own clause has 'do not' (excused 'not'); heading has no marker -> positive -> evidence." }
+  },
+  "controlTask": {
+    "dir": "fixtures/control-task/T80",
+    "taskId": "T80",
+    "expectedFailures": [],
+    "schemaIssues": false,
+    "trace": "All pure conditions pass by reading: secret anchors absent from repo/ files and paths (grep); entity src/contracts.ts present as a path; every anchor in spec.md and its slice; every secret anchor stated in an unmarked line under an unmarked heading; decoy 9000 only on the 'old ... obsolete' line; 'Do not modify src/contracts.ts.' is a positive entity_cue clause in slice B and spec; brief.md has no anchor, decoy or entity; decoy 9000 has 4 digits and is in no anchor; anchors unique; two top-level sections, one per slice, no preamble. Execution conditions 1-3 are deferred K (hidden/, oracle/, mutants/ present)."
+  },
+  "badTasks": {
+    "c4-secret-in-filename": { "taskId": "T81", "plantedCondition": "4", "expectedPureFailures": ["4"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": false, "executionNote": "minimal pure-data fixture without hidden/, oracle/ or mutants/: an executed gate would also fail 1-3 for missing directories; only the planted pure condition is under test", "trace": "repo/notes-7331.md: path token '7331' (between '-' and '.') is R5's secret anchor -> cond 4; nothing else changed." },
+    "c5-entity-missing-from-repo": { "taskId": "T82", "plantedCondition": "5", "expectedPureFailures": ["5"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": false, "executionNote": "minimal pure-data fixture (see c4)", "trace": "R7 entity anchor and its spec line renamed to src/interfaces.ts, which no repo path or file contains -> cond 5; 6 and 6d still pass ('Do not modify src/interfaces.ts.' in slice B)." },
+    "c6-anchor-missing-from-slice": { "taskId": "T83", "plantedCondition": "6", "expectedPureFailures": ["6"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": false, "executionNote": "minimal pure-data fixture (see c4)", "trace": "R5's line '... jitter seed is 7331.' moved from section A to the end of section B: in spec.md but not in source slice A -> cond 6; 6b skips anchors that fail 6." },
+    "c7-duplicate-anchor": { "taskId": "T84", "plantedCondition": "7", "expectedPureFailures": ["7"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": false, "executionNote": "minimal pure-data fixture (see c4)", "trace": "R2 also claims R1's anchor clockPort.now -> shared by R1, R2 -> cond 7; the duplicate is still in slice A unmarked so 6/6b pass." },
+    "c8-overlapping-slices": { "taskId": "T85", "plantedCondition": "8", "expectedPureFailures": ["8"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": true, "executionNote": "minimal pure-data fixture (see c4)", "trace": "slice B lists both headings -> '# Module A: rate limiter' in both slices -> cond 8; TaskSchema's own overlap refinement also reports a schema issue (not a gate condition). Slice B then contains section A too, so 6/6b/6d still pass." },
+    "c6b-secret-only-negated": { "taskId": "T86", "plantedCondition": "6b", "expectedPureFailures": ["6b"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": false, "executionNote": "minimal pure-data fixture (see c4)", "trace": "'The bucket capacity is not 4096 tokens.' -> R2's only occurrence is in a clause with 'not' -> marked-only in slice A and spec -> cond 6b (two findings); 6 passes (present)." },
+    "c6c-decoy-unmarked": { "taskId": "T87", "plantedCondition": "6c", "expectedPureFailures": ["6c"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": false, "executionNote": "minimal pure-data fixture (see c4)", "trace": "added 'The default retryCeiling is 9000.' under '# Module B: retry client' (no marker) -> decoy 9000 in an unmarked clause -> cond 6c." },
+    "c6d-entity-not-protected": { "taskId": "T88", "plantedCondition": "6d", "expectedPureFailures": ["6d"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": false, "executionNote": "minimal pure-data fixture (see c4)", "trace": "R7's only cue clause is 'src/contracts.ts is not protected.': state cue + 'not' -> entity_cue unknown on slice B and spec -> cond 6d (two findings); 6 passes; 6e passes (brief has no entity)." },
+    "c6e-brief-secret": { "taskId": "T89", "plantedCondition": "6e", "expectedPureFailures": ["6e"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": false, "executionNote": "minimal pure-data fixture (see c4)", "trace": "brief.md gains 'Use the jitter seed 7331.' -> secret anchor in brief -> cond 6e." },
+    "c6f-short-decoy": { "taskId": "T90", "plantedCondition": "6f", "expectedPureFailures": ["6f"], "expectedExecutionFailures": ["1", "2", "3"], "schemaIssues": false, "executionNote": "minimal pure-data fixture (see c4)", "trace": "R4 decoy '9': 1 digit and 1 character -> not distinctive; also inside anchor '4096' -> cond 6f (two findings). '9' never occurs at a token boundary in spec.md, so 6c passes; it equals no anchor, so 7 passes." },
+    "c2-untouched-passes-a-group": { "taskId": "T91", "plantedCondition": "2", "expectedPureFailures": [], "expectedExecutionFailures": ["2"], "schemaIssues": false, "executionNote": "needs execution (deferred K, DV-M2-04): the starter implements C0, so the untouched repo passes C0 and R7 (protected file unchanged); oracle and mutants as in T80 keep 1 and 3 passing", "trace": "pure conditions identical to T80 (the starter changes add no anchor) -> no pure failure." },
+    "c3-mutant-breaks-two-groups": { "taskId": "T92", "plantedCondition": "3", "expectedPureFailures": [], "expectedExecutionFailures": ["3"], "schemaIssues": false, "executionNote": "needs execution (deferred K, DV-M2-04): mutants/R2 also changes the empty-queue sentinel, so it fails R2 and R8 with no coupling declared on either side", "trace": "pure conditions identical to T80 -> no pure failure." }
+  }
+}

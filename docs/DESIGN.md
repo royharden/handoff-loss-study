@@ -36,16 +36,16 @@ Summary of the plan of record (S42 PLAN.md, frozen 2026-10-27). D-numbers refer 
 | `src/core/ids.ts` | closed vocabularies: task/requirement/group ids, cells, arms, workers, tranches, editions, providers, tools, run ids, repo paths | M1 written |
 | `src/core/handoff-schema.ts` | fixed-brief schema (7 fields, strict), handoff records per channel, length bound | M1 written |
 | `src/core/contracts.ts` | Task/Requirement/Anchor/Coupling, static.json, Usage, Reservation (D7), run limits, GroupResults, segment provenance (D16), provider port data, ProviderPort/SandboxPort/RunnerPort, evidence states and classes, carry pairs, RunEvent, RunRecord, Approval, PreregManifest, HeldoutManifest | M1 written |
-| `src/tasks/{load,validate,coupling}.ts` | task loading; admission gate conditions 4–8 and 6b–6f in TS; 1–3, 9 via SandboxPort | M2 |
-| `src/score/{normalize,evidence,classify,visibility,extractive,retention}.ts` | the §4 matcher, classification, visibility audit, extractive baseline | M2 |
-| `src/providers/{port,null,scripted}.ts`, `{mock,anthropic,ledger,prices}.ts` | provider adapters; `port.ts` re-exports the core `ProviderPort` | M2, M4 |
-| `src/sandbox/{port,local}.ts`, `{docker,relay,grader/*}.ts` | LocalUnsafeSandbox (authored code only); D17 two-container grader sources | M2, M4 |
+| `src/tasks/{load,validate,coupling}.ts` | task loading; admission gate conditions 4–8 and 6b–6f in TS; 1–3, 9 via SandboxPort | M2 written |
+| `src/score/{normalize,evidence,classify,visibility,extractive,retention}.ts`, `src/score/fixture.ts` | the §4 matcher, classification, visibility audit, extractive baseline; scripted-fixture scorer and `expected.json` schema | M2 written |
+| `src/providers/{port,null,scripted}.ts`, `{mock,anthropic,ledger,prices}.ts` | provider adapters; `port.ts` re-exports the core `ProviderPort` | M2 written (port, null, scripted), M4 |
+| `src/sandbox/{port,local}.ts`, `{docker,relay,grader/*}.ts` | LocalUnsafeSandbox (authored code only); D17 two-container grader sources | M2 written (port, local), M4 |
 | `src/runner/**` | episode loop, closed tools, workspaces, budget meter, merge, policies, channels | M4 |
 | `src/store`, `src/stats`, `src/report` | hash-chained JSONL store and verify; bootstrap/McNemar/precision; tables, markdown, JSON, HTML | M5 |
-| `cli/hls.ts` | the `hls` CLI | M2 (validate, selftest, demo, score), M4–M5 (rest) |
+| `cli/hls.ts` | the `hls` CLI | M2 written (validate, selftest, fixture, check carry-selftest/visibility, demo, score), M4–M5 (rest) |
 | `viewer/` | Vite + React 18 offline results viewer | M5 |
 | `tasks/dev/T01..T06` | dev corpus (builder) | M3, M6 |
-| `fixtures/` | scripted fixtures, planted bad tasks, builder carry self-test pairs | M2 |
+| `fixtures/` | `scripted/` (18 paths), `expected.json` (hand traces), `control-task/T80` (valid gate fixture), `bad-tasks/` (12 planted), `carry-conformance/builder-selftest.json` (63 pairs) | M2 written |
 | `docker/*.Dockerfile` | episode, candidate and grader image sources (never built during construction) | M4 |
 
 `tasks/`, `fixtures/` and `results/` are excluded from the root typecheck and lint: task repos, oracles and
@@ -116,3 +116,40 @@ files. Approved spend: $0.
 
 G-A data admission (PENDING, owner), G-I instrument (PENDING, deferred validation + custodian sealed
 pairs), G-C calibration (after T1). See PLAN.md §6; `docs/DATA.md`, `docs/PREREG.md`.
+
+## 7. M2 interpretation choices (builder; open to review)
+
+The matcher and gate follow PLAN.md §3–§4 exactly; where the plan leaves a mechanical detail open, the
+builder chose the reading that resolves away from `evidence`. Codes I1–I8 are repeated in
+`src/score/evidence.ts`.
+
+1. **I1** Line, `;` and list-item boundaries also apply inside each fixed-brief JSON string value; a value is
+   its own document, so headings and list intros never cross values.
+2. **I2** List intro = the first non-list line above a list (skipping list items, indented continuation
+   lines and blank lines) when it ends in `:`; a heading stops the search. List-item starts are line starts.
+3. **I3** A line inherits the nearest heading strictly above it (a heading line inherits the previous one).
+4. **I4** An occurrence overlapping several clauses is marked if any is marked.
+5. **I5** `entity_cue`: the cue must be in the anchor's own clause for `positive`; markers and `not`/`never`
+   are looked for in the clause plus its inherited heading/intro; the state cue that triggers the negation
+   rule must be in the clause itself ("# Protected files" above "Do not modify src/contracts.ts." stays
+   positive). Cue only in the heading/intro -> `unknown`. An anchor in a `prohibitions[]` element that fails
+   the positive rules -> `unknown`.
+6. **I6** Several entity anchors combine like secret groups.
+7. **I7** `secret_anchor` reads only secret anchors, `entity_cue` only entity anchors.
+8. **I8** Full-trace carriers are exactly `assistant`, `handoff`, `spec_text` messages.
+9. Markers are whole words over `[A-Za-z0-9_]` boundaries, so a marker word inside an anchor that is a
+   separate word (e.g. a path segment `/old/`) marks the clause; gate cond. 6b would then reject the task.
+10. **Classes:** the non-split rows (`spec_blind`, `null_worker`, `oracle`) use the `single` row of §4.9.
+    Contract mismatch reads "both modules' C0 parts pass" as "C0 passes" (one C0 group per task).
+11. **Visibility (D16):** a whole anchor group is permitted when any alternate is in the worker's material;
+    `self_originated_anchor` is logged only for anchors the worker had no legitimate source for.
+12. **Gate:** anchors, decoys and repo text/paths are compared after §4.1 normalisation with the §4.3
+    token-boundary rule (cond. 4 therefore does not flag `13000` inside `130000`); 6b and 6d skip an anchor
+    that already fails cond. 6; text before the first top-level heading is reported under cond. 8; TaskSchema
+    task-level refinements (e.g. its own slice-overlap check) are reported as schema issues next to the
+    conditions; a coupling is accepted when declared on either requirement (`declared` or `prerequisite`).
+13. **Scripted fixtures** stand in for M4 episode output: they record carriers, last-edit sequence numbers,
+    group pass maps, status, scripted completions, write refusals and request payloads; everything else
+    (usage, flags, exclusion, evidence, classes, retention) is derived and compared with `expected.json`.
+14. `hls validate` exit codes: 0 admitted, 1 a condition failed or a schema issue, 3 nothing failed but a
+    condition is deferred (always the case without `--execute`).

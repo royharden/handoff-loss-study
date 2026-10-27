@@ -20,6 +20,11 @@
   to gate G-C): override wording that leaves the decoy unmarked; ordinary uses of marker words on the same
   line; long unwrapped paragraphs; a required alternative on the same line as a negation; paraphrase without
   the anchor (`no_evidence`).
+- **Matcher builder choices (M2, `docs/DESIGN.md` §7).** Each resolves away from `evidence` and so can lower
+  recall/raise `unknown` coverage (a G-C risk): an entity cue only in a heading or list intro gives `unknown`;
+  a state cue with any `not`/`never` in its clause gives `unknown`; a marker word anywhere on a line marks
+  every anchor on that line. One choice keeps a disclosed false-evidence risk: a line that is not a list
+  intro (no trailing `:`) does not mark the list below it.
 - Small corpus (6 dev, 12 held-out), one model, one temperature; projected precision, not power.
 
 TODO(M5/M6): guessability diagnostics (requirements passing exactly 1 of 3 spec-blind runs), unknown

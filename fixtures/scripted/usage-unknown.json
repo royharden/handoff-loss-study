@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "usage-unknown",
+  "edition": "SYNTHETIC",
+  "tranche": "FIXTURE",
+  "provider": "scripted",
+  "path": "usage_unknown",
+  "description": "single: the second completion reported no usage; the run halts usage_unknown, is not graded and is excluded.",
+  "arm": "single",
+  "requirements": [{"id":"R5","kind":"late_clarification","slot":"transfer_A_to_B","sourceSlice":"A","responsibleWriter":"B","testGroup":"R5","anchors":[{"type":"secret","alternates":["13000"]}],"decoys":["9000"],"couplings":[],"summary":"late clarification: retryCeiling 13000 replaces the starter default 9000"}],
+  "view": {"spec":null,"slices":null},
+  "carriers": [],
+  "lastEdits": [{"worker":"single","seq":null}],
+  "groups": null,
+  "status": "usage_unknown",
+  "budget": null,
+  "scripted": [{"worker":"single","completions":[{"message":{"text":"","toolCalls":[{"id":"s1","name":"read_file","input":{"path":"src/b.ts"}}]},"usage":{"input":4000,"output":500,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"},{"message":{"text":"","toolCalls":[]},"usage":{"input":0,"output":0,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"unknown"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"other"}]}],
+  "writeRefusals": [],
+  "requests": []
+}

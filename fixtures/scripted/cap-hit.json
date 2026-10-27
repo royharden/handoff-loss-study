@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "cap-hit",
+  "edition": "SYNTHETIC",
+  "tranche": "FIXTURE",
+  "provider": "scripted",
+  "path": "cap hit",
+  "description": "single: spent 135000 of 150000 and the next reservation (20000) does not fit; graded as left; one ledger retry was used.",
+  "arm": "single",
+  "requirements": [{"id":"R5","kind":"late_clarification","slot":"transfer_A_to_B","sourceSlice":"A","responsibleWriter":"B","testGroup":"R5","anchors":[{"type":"secret","alternates":["13000"]}],"decoys":["9000"],"couplings":[],"summary":"late clarification: retryCeiling 13000 replaces the starter default 9000"}],
+  "view": {"spec":null,"slices":null},
+  "carriers": [],
+  "lastEdits": [{"worker":"single","seq":9}],
+  "groups": {"C0":true,"R5":false},
+  "status": "cap_hit",
+  "budget": {"allowanceTokens":150000,"pendingReservationTokens":20000},
+  "scripted": [{"worker":"single","completions":[{"message":{"text":"","toolCalls":[{"id":"s1","name":"edit_file","input":{"path":"src/b.ts"}}]},"usage":{"input":120000,"output":15000,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":1,"stopReason":"tool_use"}]}],
+  "writeRefusals": [],
+  "requests": []
+}
