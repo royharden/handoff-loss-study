@@ -1,0 +1,35 @@
+# dependencies and build output
+node_modules/
+dist/
+viewer/dist/
+coverage/
+*.tsbuildinfo
+*.log
+
+# environment and credentials: never committed (only the placeholder template is tracked)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+auth.json
+.credentials.json
+
+# scratch run output (committed study results live under results/<edition>/ and are added explicitly)
+.hls-tmp/
+results/**/tmp/
+
+# agent-only material belongs in the outer shell, never in this repo
+.chatexports/
+.thinking/
+.agent-registry/
+.agent-work/
+
+# held-out data never enters the repo; only heldout.manifest.json does (PLAN.md D25)
+heldout-sealed/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

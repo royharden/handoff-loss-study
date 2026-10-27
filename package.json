@@ -1,0 +1,53 @@
+{
+  "name": "handoff-loss-study",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Lexical carry / implementation outcome decomposition: do role or context splits keep fewer planted spec requirements than a single worker? Keyless instrument; live spend disabled by default.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "hls": "tsx cli/hls.ts",
+    "demo": "tsx cli/hls.ts demo",
+    "selftest": "tsx cli/hls.ts selftest",
+    "fixture": "tsx cli/hls.ts fixture",
+    "validate:dev": "tsx cli/hls.ts validate tasks/dev",
+    "check:carry": "tsx cli/hls.ts check carry",
+    "check:carry-selftest": "tsx cli/hls.ts check carry-selftest",
+    "check:visibility": "tsx cli/hls.ts check visibility",
+    "check:alternates": "tsx cli/hls.ts check alternates",
+    "check:containment": "tsx cli/hls.ts check containment",
+    "check:budget": "tsx cli/hls.ts check budget",
+    "check:stats": "tsx cli/hls.ts check stats",
+    "verify": "tsx cli/hls.ts verify",
+    "plan": "tsx cli/hls.ts plan",
+    "study": "tsx cli/hls.ts run",
+    "report": "tsx cli/hls.ts report",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "build": "npm run typecheck && npm run build:viewer",
+    "build:viewer": "vite build --config viewer/vite.config.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.39.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zod": "3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.24.0",
+    "@types/node": "22.14.0",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "@vitejs/plugin-react": "4.3.4",
+    "eslint": "9.24.0",
+    "tsx": "4.19.2",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.29.0",
+    "vite": "6.2.6",
+    "vitest": "3.1.1"
+  }
+}
