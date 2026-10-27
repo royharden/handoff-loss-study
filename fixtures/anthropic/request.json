@@ -1,0 +1,4 @@
+{
+  "provenance": "Hand-authored recorded-shape fixture; unverified against live API. NOT a captured request.",
+  "body": {"model":"claude-haiku-5-5","temperature":1,"max_tokens":2048,"system":"Use only supplied tools.","messages":[{"role":"user","content":[{"type":"text","text":"SYNTHETIC task"}]}],"tools":[{"name":"finish","description":"Finish worker.","input_schema":{"type":"object","properties":{},"required":[],"additionalProperties":false}}]}
+}

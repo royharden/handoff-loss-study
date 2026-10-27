@@ -17,6 +17,11 @@ import type { RepoPath } from '../core/ids';
 
 export type FileTree = ReadonlyMap<RepoPath, Uint8Array>;
 
+/** Shared port error contract; callers need not import an executable sandbox adapter. */
+export function isSandboxIntegrityError(error: unknown): error is Error & { readonly integrityStop: true } {
+  return error instanceof Error && 'integrityStop' in error && error.integrityStop === true;
+}
+
 /** Where a graded snapshot came from. Model output is graded only by the Docker pair (D17). */
 export type SnapshotOrigin = 'oracle' | 'untouched' | 'mutant' | 'alternate' | 'fixture' | 'model_output';
 
