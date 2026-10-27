@@ -350,10 +350,21 @@ const HELP = `hls <command>
   check carry-selftest | visibility [--json]              builder matcher pairs / visibility fixtures
   demo                                                    keyless SYNTHETIC walkthrough
   score <fixture.json>                                    score one scripted fixture
-Later milestones: check carry|alternates|containment|budget|stats, verify, plan, run, report, prereg, heldout.`;
+  check carry|alternates|containment|budget|stats          custodian / authored / instrument checks
+  plan --tranche T0|T1|T2                                dry-run schedule and conservative USD bound
+  run [--provider null|mock --execute] [--live]          dry by default; live requires owner activation
+  verify <results-directory>                            gzip/hash/score/visibility verification
+  report <results-directory> [--out <directory>]         verified JSON, Markdown and escaped HTML
+  prereg freeze --input <manifest.json>                  immutable source/analysis/order pin
+  heldout import --manifest <custodian-manifest.json>    metadata only; no sealed contents`;
 
 export async function main(argv: readonly string[]): Promise<number> {
   const [cmd, ...rest] = argv;
+  if (['plan', 'run', 'verify', 'report', 'prereg', 'heldout'].includes(cmd ?? '') || (cmd === 'check' && ['stats', 'budget', 'containment', 'alternates', 'carry'].includes(rest[0] ?? ''))) {
+    const { studyMain } = await import('./study');
+    const result = await studyMain(argv, REPO_ROOT);
+    if (result !== null) return result;
+  }
   const json = rest.includes('--json');
   switch (cmd) {
     case 'validate':
@@ -365,6 +376,10 @@ export async function main(argv: readonly string[]): Promise<number> {
     case 'check':
       return cmdCheck(rest.find((a) => !a.startsWith('--')), json);
     case 'demo':
+      if (rest.includes('--provider') && rest[rest.indexOf('--provider') + 1] === 'mock') {
+        const { studyMain } = await import('./study');
+        return (await studyMain(['run', '--tranche', 'T0', '--provider', 'mock', '--execute', '--out', join(REPO_ROOT, 'results', 'demo')], REPO_ROOT)) ?? 2;
+      }
       return cmdDemo();
     case 'score':
       return cmdScore(rest.find((a) => !a.startsWith('--')));
