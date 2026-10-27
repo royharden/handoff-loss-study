@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "protectedFiles": [
+    {
+      "path": "src/types.ts",
+      "sha256": "bccd5a77318534699085fe21cd405018e75813307d8b2347057ba01c14c37f7a"
+    }
+  ],
+  "forbiddenIdentifiers": [
+    { "identifier": "eval", "reason": "dynamic code execution is outside the task; the invoice builder is plain code" },
+    { "identifier": "Function", "reason": "dynamic code construction is outside the task" },
+    { "identifier": "process", "reason": "task modules have no environment, exit or I/O access" },
+    { "identifier": "require", "reason": "task modules use static ES imports of their own files only" },
+    { "identifier": "globalThis", "reason": "task modules keep no global state and must not reach the grader's call hook" }
+  ]
+}
