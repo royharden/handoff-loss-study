@@ -71,22 +71,22 @@ Rows are pre-filled from the plan of record §12 (compound items split so each r
 
 | # | Milestone | Item | Inspected file:line | Pass/fail | Reviewer callsign |
 |---|---|---|---|---|---|
-| M3-1 | M3 | T01/T02 `task.json` parse (`node -e`) and match the M1 zod shape by inspection | | | |
-| M3-2 | M3 | All eight trap kinds present once (T01, T02) | | | |
-| M3-3 | M3 | Slot counts 2/2/2/2 (T01, T02) | | | |
-| M3-4 | M3 | `task.json` records slot-assignment hash input `<taskId>:<seed>`, its sha256 (computed with `sha256sum`), and the assignment per `docs/TASK-RECIPE.md` | | | |
-| M3-5 | M3 | Secret anchors absent from `repo/` (grep) | | | |
-| M3-6 | M3 | Every anchor present in `spec.md` and in its named slice | | | |
-| M3-7 | M3 | Slices partition the spec exactly | | | |
-| M3-8 | M3 | Cond. 6b: each secret anchor has an unmarked-clause occurrence in its slice and in `spec.md` | | | |
-| M3-9 | M3 | Cond. 6c: every decoy occurrence in `spec.md` is in a marked clause (T01 R5 decoy marked in spec, otherwise only the starter default) | | | |
-| M3-10 | M3 | Cond. 6d: each `do_not_touch` entity has a positive `entity_cue` clause in its slice and in `spec.md` | | | |
-| M3-11 | M3 | Cond. 6e: `brief.md` holds no secret anchor, decoy or entity+cue clause | | | |
-| M3-12 | M3 | Cond. 6f: decoys distinctive (≥ 3 digits or ≥ 4 chars), distinct from anchors and each other, not inside an anchor | | | |
-| M3-13 | M3 | Every slice section starts with its own heading | | | |
-| M3-14 | M3 | Each mutant's diff touches only its requirement's code path and not C0 | | | |
-| M3-15 | M3 | Oracle visibly satisfies every R group | | | |
-| M3-16 | M3 | Demo-script requirements exist (T01 R5 `retryCeiling: 13000` vs decoy `9000`; T01 transfer-slot requirement named for the demo) | | | |
+| M3-1 | M3 | T01/T02 `task.json` parse (`node -e`) and match the M1 zod shape by inspection | tasks/dev/T01/task.json:1-127, tasks/dev/T02/task.json:1-124 vs src/core/contracts.ts:111-250 (ed2d994), ids.ts:18-39,150-161 (node -e JSON.parse OK; slot routing, cross_module_contract in transfer, do_not_touch entity, slotAssignment.input prefix, summaries <=500 by inspection) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-2 | M3 | All eight trap kinds present once (T01, T02) | T01/task.json:29,42,56,68,80,92,104,116; T02/task.json:29,41,53,65,77,89,101,113 (each of the 8 kinds once) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-3 | M3 | Slot counts 2/2/2/2 (T01, T02) | T01/task.json:30-117 (R1,R4 local_A; R5,R7 local_B; R6,R8 transfer_A_to_B; R2,R3 transfer_B_to_A); T02/task.json:30-114 (R1,R7 local_A; R3,R5 local_B; R6,R8 transfer_A_to_B; R2,R4 transfer_B_to_A) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-4 | M3 | `task.json` records slot-assignment hash input `<taskId>:<seed>`, its sha256 (computed with `sha256sum`), and the assignment per `docs/TASK-RECIPE.md` | T01/task.json:21-25, T02/task.json:21-25; docs/TASK-RECIPE.md:45-92 (reviewer recomputed `printf %s T0n:1 | sha256sum` = recorded digests; re-derived Fisher-Yates + T01 R6 fix-up independently; matches recorded slots) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-5 | M3 | Secret anchors absent from `repo/` (grep) | T01/repo/** and T02/repo/** incl. tests/smoke.test.ts: grep -rnF and find|grep -F on every secret alternate; no hit in contents, names or paths | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-6 | M3 | Every anchor present in `spec.md` and in its named slice | T01/spec.md:12,14,18,24,28,30,34,38 (slices task.json:18-19); T02/spec.md:10,12,18,22,24,28,32,36 (slices task.json:18-19); entity anchors present as repo/src/contracts.ts, repo/src/types.ts | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-7 | M3 | Slices partition the spec exactly | T01/spec.md:1,10,16,20,26,32,36 = A 4 + B 3 headings (task.json:18-19); T02/spec.md:1,8,14,20,26,34 = A 3 + B 3 (task.json:18-19); exact cover, no overlap | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-8 | M3 | Cond. 6b: each secret anchor has an unmarked-clause occurrence in its slice and in `spec.md` | T01/spec.md:12,14 (clause before `;`),18,28,30,34,38; T02/spec.md:10,18,22,24 (clause before `;`),28,32,36: no 4.5 marker or n't/cannot in clause, heading or list intro (grep -iw over both specs: markers only at T01:14 second clause, T01:40, T02:30, T02:38) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-9 | M3 | Cond. 6c: every decoy occurrence in `spec.md` is in a marked clause (T01 R5 decoy marked in spec, otherwise only the starter default) | T01/spec.md:14 (240 after `;`, wrong), :40 (9000, old/obsolete), RetryScheduled absent from spec; 9000 otherwise only repo/src/contracts.ts:35; T02/spec.md:30 (10000, wrong), :38 (290, old/obsolete) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-10 | M3 | Cond. 6d: each `do_not_touch` entity has a positive `entity_cue` clause in its slice and in `spec.md` | T01/spec.md:24 (`src/contracts.ts` stays unchanged, slice B, no marker/not/never); T02/spec.md:12 (`src/types.ts` stays unchanged, slice A) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-11 | M3 | Cond. 6e: `brief.md` holds no secret anchor, decoy or entity+cue clause | T01/brief.md:1-6 = spec.md:3-8; T02/brief.md:1-4 = spec.md:3-6 (verbatim Objective body; no secret alternate, decoy or entity anchor). Non-blocking wording note on T02 brief.md:3 "only when" in review report | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-12 | M3 | Cond. 6f: decoys distinctive (≥ 3 digits or ≥ 4 chars), distinct from anchors and each other, not inside an anchor | T01/task.json:62,74,86 (RetryScheduled, 240, 9000); T02/task.json:71,83 (10000, 290): >=3 digits or >=4 chars, distinct, not inside any anchor | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-13 | M3 | Every slice section starts with its own heading | T01/spec.md:1,10,16,20,26,32,36; T02/spec.md:1,8,14,20,26,34 (first line a heading; all sections top-level `# `; headings marker-free) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-14 | M3 | Each mutant's diff touches only its requirement's code path and not C0 | T01 mutants R1-R4 vs oracle/src/schedule.ts:31,34,40,24; R5,R6,R8 vs oracle/src/dispatch.ts:16,29,25; R7 vs repo/src/contracts.ts:35. T02 mutants R1,R2,R4 vs oracle/src/normalize.ts:33,37,23; R3,R5,R6,R8 vs oracle/src/invoice.ts:21-22+40,16,35,24; R7 vs repo/src/types.ts:54 (diffed; one path each, no C0 path; matrix traced against hidden/*.test.ts) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-15 | M3 | Oracle visibly satisfies every R group | T01/oracle/src/schedule.ts:22-41, dispatch.ts:15-31 vs hidden/_c0.ts:75-115, R1-R8.test.ts; T02/oracle/src/normalize.ts:20-45, invoice.ts:15-44 vs hidden/_c0.ts:77-106, R1-R8.test.ts (hand-traced; starter fails C0 in both; alternates A1/A2 also traced) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
+| M3-16 | M3 | Demo-script requirements exist (T01 R5 `retryCeiling: 13000` vs decoy `9000`; T01 transfer-slot requirement named for the demo) | T01/spec.md:38,40 + task.json:78-89 (R5 late_clarification `retryCeiling: 13000`, decoy 9000 marked); task.json:91-100 (R6 transfer_A_to_B, demo transfer requirement) | pass | 0859_Claude_Opus55_Sub_S42RevM3 |
 
 ## M4 — Worker loop, policies, channels, budget, providers, sandbox/grader sources
 
