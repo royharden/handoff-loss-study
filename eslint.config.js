@@ -47,7 +47,7 @@ const ERASABLE_ONLY = [
 
 export default tseslint.config(
   {
-    ignores: ['node_modules/**', 'dist/**', 'viewer/dist/**', 'coverage/**', 'tasks/**', 'fixtures/**', 'results/**'],
+    ignores: ['.hls-tmp/**', 'node_modules/**', 'dist/**', 'viewer/dist/**', 'coverage/**', 'tasks/**', 'fixtures/**', 'results/**'],
   },
   js.configs.recommended,
   ...tseslint.configs.strict,

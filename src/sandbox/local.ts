@@ -62,7 +62,7 @@ function writeTree(root: string, tree: FileTree): void {
 
 function runGroup(nodeBin: string, args: readonly string[], cwd: string, timeoutMs: number): Promise<GroupResult> {
   const started = Date.now();
-  return new Promise((resolvePromise) => {
+  return new Promise((resolvePromise, reject) => {
     const child = spawn(nodeBin, [...args], {
       cwd,
       // Windows Node/OpenSSL needs SystemRoot for OS entropy. Copy only named non-secret OS paths.
@@ -71,21 +71,35 @@ function runGroup(nodeBin: string, args: readonly string[], cwd: string, timeout
         NODE_ENV: 'test', CI: '1' },
       stdio: ['ignore', 'ignore', 'ignore'],
       shell: false,
+      windowsHide: true,
     });
     let settled = false;
+    let timedOut = false;
+    let spawnFailed = false;
+    let closeDeadline: ReturnType<typeof setTimeout> | undefined;
     const finish = (r: GroupResult): void => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
+      clearTimeout(closeDeadline);
       resolvePromise(r);
     };
     const timer = setTimeout(() => {
+      timedOut = true;
+      // A kill request is not termination confirmation. Keep the cwd alive until close.
       child.kill('SIGKILL');
-      finish({ passed: false, failure: 'timeout', durationMs: Date.now() - started });
+      closeDeadline = setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        reject(new LocalSandboxRefusedError('worker termination unconfirmed; grading stopped'));
+      }, 2_000);
     }, timeoutMs);
-    child.on('error', () => finish({ passed: false, failure: 'grader_error', durationMs: Date.now() - started }));
+    child.on('error', () => { spawnFailed = true; });
     child.on('close', (code) => {
-      finish(code === 0 ? { passed: true, failure: null, durationMs: Date.now() - started } : { passed: false, failure: 'assertion', durationMs: Date.now() - started });
+      finish(timedOut ? { passed: false, failure: 'timeout', durationMs: Date.now() - started }
+        : spawnFailed ? { passed: false, failure: 'grader_error', durationMs: Date.now() - started }
+        : code === 0 ? { passed: true, failure: null, durationMs: Date.now() - started }
+        : { passed: false, failure: 'assertion', durationMs: Date.now() - started });
     });
   });
 }
