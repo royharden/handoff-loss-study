@@ -17,8 +17,18 @@ import { relayPair } from './relay';
 import type { PublicTestPort } from '../runner/tools';
 import type { WorkerRole } from '../core/ids';
 
+/** Actual ledger claim supplied by the trusted host; labels alone do not prove ownership. */
+export interface AgentPortsIdentity {
+  readonly project: string;
+  readonly instance: string;
+  readonly owner: string;
+}
+export function assertAgentPortsIdentity(value: AgentPortsIdentity | undefined): asserts value is AgentPortsIdentity {
+  if (!value || [value.project, value.instance, value.owner].some((field) => typeof field !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,159}$/.test(field) || /placeholder/i.test(field))) throw new Error('actual agent-ports project/instance/owner identity required');
+}
 export interface DockerPairOptions {
   ownerRunId: string; workRoot: string; hidden: FileTree; staticConfig: StaticConfig;
+  agentPorts: AgentPortsIdentity;
   doNotTouchGroups: readonly TestGroupId[];
   /** Trusted, public starter src/*.ts allowlist, never evaluator paths. */
   candidatePaths: readonly string[];
@@ -31,10 +41,13 @@ export class SandboxIntegrityError extends Error {
   readonly integrityStop = true;
   constructor(message: string) { super(message); this.name = 'SandboxIntegrityError'; }
 }
-export function dockerArgs(options: { ownerRunId: string; name: string; uid: 10001 | 10002; image: string; mounts: readonly { source: string; target: '/candidate' | '/hidden' | '/results'; readOnly: boolean }[]; command: readonly string[] }): string[] {
+export function dockerArgs(options: { ownerRunId: string; agentPorts: AgentPortsIdentity; name: string; uid: 10001 | 10002; image: string; mounts: readonly { source: string; target: '/candidate' | '/hidden' | '/results'; readOnly: boolean }[]; command: readonly string[] }): string[] {
   if (!/^[A-Za-z0-9_.-]{1,160}$/.test(options.ownerRunId) || !/^hls-[a-z0-9-]+$/.test(options.name)) throw new Error('invalid owner/name');
   if (!/^[A-Za-z0-9_./:-]+@sha256:[a-f0-9]{64}$/.test(options.image)) throw new Error('image must be immutable name@sha256 digest');
+  const identity = options.agentPorts;
+  assertAgentPortsIdentity(identity);
   const args = ['run', '--rm', '-i', '--name', options.name, '--pull', 'never', '--network', 'none', '--read-only', '--tmpfs', '/tmp:rw,noexec,nosuid,nodev,size=128m,mode=1777', '--memory', '1g', '--cpus', '1', '--pids-limit', '128', '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges:true', '--user', String(options.uid), '--label', `hls.owner=${options.ownerRunId}`, '--label', 'hls.app=handoff-loss-study'];
+  for (const key of ['project', 'instance', 'owner'] as const) args.push('--label', `agentports.${key}=${identity[key]}`);
   for (const mount of options.mounts) {
     if (mount.source.includes(',') || mount.source.includes('\n')) throw new Error('invalid mount source');
     if (options.uid === 10001 && (mount.target !== '/candidate' || !mount.readOnly)) throw new Error('candidate may mount only extracted readonly source');
@@ -116,8 +129,8 @@ export class DockerPairSandbox implements SandboxPort {
         const start = (args: string[]): ChildProcessWithoutNullStreams => spawn('docker', args, { stdio: ['pipe', 'pipe', 'pipe'], env: { PATH: process.env['PATH'] ?? '', SystemRoot: process.env['SystemRoot'] ?? '' }, shell: false, windowsHide: true });
         let candidate: ChildProcessWithoutNullStreams | null = null; let grader: ChildProcessWithoutNullStreams | null = null;
         try {
-          candidate = start(dockerArgs({ ownerRunId: o.ownerRunId, name: candidateName, uid: 10001, image: o.candidateImage, mounts: [{ source, target: '/candidate', readOnly: true }], command: ['node', '--import', 'tsx', '/runtime/grader/shim.ts', '--serve'] }));
-          grader = start(dockerArgs({ ownerRunId: o.ownerRunId, name: graderName, uid: 10002, image: o.graderImage, mounts: [{ source: hidden, target: '/hidden', readOnly: true }, { source: results, target: '/results', readOnly: false }], command: ['node', '--import', 'tsx', '/runtime/grader/entry.ts', '--group', group] }));
+          candidate = start(dockerArgs({ ownerRunId: o.ownerRunId, agentPorts: o.agentPorts, name: candidateName, uid: 10001, image: o.candidateImage, mounts: [{ source, target: '/candidate', readOnly: true }], command: ['node', '--import', 'tsx', '/runtime/grader/shim.ts', '--serve'] }));
+          grader = start(dockerArgs({ ownerRunId: o.ownerRunId, agentPorts: o.agentPorts, name: graderName, uid: 10002, image: o.graderImage, mounts: [{ source: hidden, target: '/hidden', readOnly: true }, { source: results, target: '/results', readOnly: false }], command: ['node', '--import', 'tsx', '/runtime/grader/entry.ts', '--group', group] }));
           const relay = await relayPair(candidate, grader, o.timeoutMs ?? 60_000);
           let verdict: GroupResult = { passed: false, failure: relay.failure ?? 'grader_error', durationMs: Date.now() - started };
           // Sole verdict authority is this grader-only mounted file. Candidate stdout is NEVER parsed as a verdict.
@@ -134,7 +147,7 @@ export class DockerPairSandbox implements SandboxPort {
   }
 }
 
-export interface DockerPublicOptions { ownerRunId: string; workRoot: string; episodeImage: string; publicTests: FileTree; authorizeContainers: (ownerRunId: string) => Promise<boolean>; timeoutMs?: number; }
+export interface DockerPublicOptions { ownerRunId: string; agentPorts: AgentPortsIdentity; workRoot: string; episodeImage: string; publicTests: FileTree; authorizeContainers: (ownerRunId: string) => Promise<boolean>; timeoutMs?: number; }
 export class DockerPublicTestPort implements PublicTestPort {
   readonly options: DockerPublicOptions;
   constructor(options: DockerPublicOptions) { this.options = options; }
@@ -147,7 +160,7 @@ export class DockerPublicTestPort implements PublicTestPort {
     for (const [path, bytes] of o.publicTests) { if (!/^[A-Za-z0-9_./-]+\.test\.ts$/.test(path)) throw new Error('public test allowlist invalid'); tree.set(path, bytes); }
     writeTree(source, tree); const name = `hls-p-${randomUUID()}`;
     try {
-      const args = dockerArgs({ ownerRunId: o.ownerRunId, name, uid: 10001, image: o.episodeImage, mounts: [{ source, target: '/candidate', readOnly: true }], command: ['node', '--import', 'tsx', '/runtime/grader/public.ts', '--tests', ...o.publicTests.keys()] });
+      const args = dockerArgs({ ownerRunId: o.ownerRunId, agentPorts: o.agentPorts, name, uid: 10001, image: o.episodeImage, mounts: [{ source, target: '/candidate', readOnly: true }], command: ['node', '--import', 'tsx', '/runtime/grader/public.ts', '--tests', ...o.publicTests.keys()] });
       const text = await new Promise<string>((resolvePromise, reject) => {
         const child = spawn('docker', args, { stdio: ['ignore', 'pipe', 'pipe'], shell: false, windowsHide: true, env: { PATH: process.env['PATH'] ?? '', SystemRoot: process.env['SystemRoot'] ?? '' } });
         let output = ''; let bytes = 0; let settled = false;

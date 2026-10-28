@@ -23,6 +23,7 @@ import type { LoadedTask } from '../src/tasks/load';
 import { findTaskDirs } from '../src/tasks/load';
 import { overlay, snapshotOf, treeDigest } from '../src/sandbox/port';
 import type { PublicTestPort } from '../src/runner/tools';
+import type { AgentPortsIdentity, assertAgentPortsIdentity as AgentPortsAssertion } from '../src/sandbox/docker';
 import { LiveStateJournal } from '../src/store/live-state';
 import type { CarryOutcome, LiveAttempt } from '../src/store/live-state';
 import { artifactFromHandoff, pairLexicalState } from '../src/score/evidence';
@@ -38,6 +39,8 @@ export interface LiveActivationPort {
   readonly workRoot: string;
   /** Stable operator-owned pre-provisioned authority outside the repo; never derived from --out. */
   readonly stateRoot: string;
+  /** Actual agent-ports claim labels; required for live dispatch, optional for custody-only checks. */
+  readonly agentPorts?: AgentPortsIdentity;
   /** Custodian loader authenticates manifest-listed bytes before constructing LoadedTask. */
   readonly loadHeldoutTask?: (taskId: string, manifest: HeldoutManifest) => Promise<{ task: LoadedTask; manifestSha256: string }>;
   /** Only the independent custodian host supplies sealed semantic labels after the stable journal claim. */
@@ -131,6 +134,7 @@ async function executePlan(root: string, args: readonly string[], plan: TrancheP
   let reservationRatio = R_T0;
   let stateJournal: LiveStateJournal | undefined;
   let liveAttempt: LiveAttempt | undefined;
+  let agentPorts: AgentPortsIdentity | undefined;
   if (live) {
     const approvalPath = join(root, 'approvals', `${plan.tranche}.json`);
     if (!existsSync(approvalPath)) throw new Error('live refused: no approval (approved spend is $0)');
@@ -139,6 +143,9 @@ async function executePlan(root: string, args: readonly string[], plan: TrancheP
     if (flag(args, '--prices') === undefined) throw new Error('live refused: current owner-approved --prices table required');
     assertActivationGates(root, plan, approval);
     if (activation === undefined || !(await activation.verifyRoyDecision(approval))) throw new Error('live refused: owner decision validation port unavailable or consent unverified');
+    const assertOwnership: typeof AgentPortsAssertion = (await import('../src/sandbox/docker')).assertAgentPortsIdentity;
+    assertOwnership(activation.agentPorts);
+    agentPorts = activation.agentPorts;
     stateJournal = new LiveStateJournal(activation.stateRoot, root);
     if (!outsideRepo(stateJournal.root, destination) || !outsideRepo(destination, stateJournal.root)) throw new Error('live result destination must be separate from trusted state root');
     if (plan.tranche !== 'T0') {
@@ -198,15 +205,15 @@ async function executePlan(root: string, args: readonly string[], plan: TrancheP
       let baselineSandboxFor: (runId: string) => SandboxPort;
       let publicTests: PublicTestPort | undefined;
       if (live) {
-        if (activation === undefined || task.hidden === null || task.staticConfig === null) throw new Error('live sandbox prerequisites missing');
+        if (activation === undefined || agentPorts === undefined || task.hidden === null || task.staticConfig === null) throw new Error('live sandbox prerequisites missing');
         const runId = makeRunId({ tranche: plan.tranche, ...run });
         if (!(await activation.authorizeContainers(runId))) throw new Error('live refused: Docker consent/agent-ports ownership unavailable');
         const { DockerPairSandbox, DockerPublicTestPort } = await import('../src/sandbox/docker');
-        const pairOptions = { ownerRunId: runId, workRoot: activation.workRoot, hidden: task.hidden, staticConfig: task.staticConfig, doNotTouchGroups: task.task.requirements.filter((r) => r.kind === 'do_not_touch').map((r) => r.testGroup), candidatePaths: [...task.repo.keys()].filter((p) => /^src\/.+\.ts$/.test(p)), candidateImage: activation.images.candidate, graderImage: activation.images.grader, authorizeContainers: activation.authorizeContainers };
+        const pairOptions = { agentPorts, ownerRunId: runId, workRoot: activation.workRoot, hidden: task.hidden, staticConfig: task.staticConfig, doNotTouchGroups: task.task.requirements.filter((r) => r.kind === 'do_not_touch').map((r) => r.testGroup), candidatePaths: [...task.repo.keys()].filter((p) => /^src\/.+\.ts$/.test(p)), candidateImage: activation.images.candidate, graderImage: activation.images.grader, authorizeContainers: activation.authorizeContainers };
         sandbox = new DockerPairSandbox(pairOptions);
         baselineSandboxFor = (ownerRunId) => new DockerPairSandbox({ ...pairOptions, ownerRunId });
         const tests = new Map(task.task.publicTests.map((path) => { const bytes = task.repo.get(path); if (bytes === undefined) throw new Error('public test path missing'); return [path, bytes] as const; }));
-        publicTests = new DockerPublicTestPort({ ownerRunId: runId, workRoot: activation.workRoot, episodeImage: activation.images.episode, publicTests: tests, authorizeContainers: activation.authorizeContainers });
+        publicTests = new DockerPublicTestPort({ agentPorts, ownerRunId: runId, workRoot: activation.workRoot, episodeImage: activation.images.episode, publicTests: tests, authorizeContainers: activation.authorizeContainers });
       } else { sandbox = new LocalUnsafeSandbox({ provider: providerName as 'null' | 'mock', origin: 'fixture', repoRoot: root, hidden: task.hidden ?? new Map(), vitestEntry: join(root, 'node_modules', 'vitest', 'vitest.mjs') }); baselineSandboxFor = () => sandbox; }
       const result = await runEpisode({ task, arm: run.arm, repeat: run.repeat, tranche: live ? plan.tranche : 'DEMO', provider, budget, sandbox, ...(publicTests === undefined ? {} : { publicTests }), ...(live ? { model: plan.model } : {}) });
       const artifactsByRequirement = Object.fromEntries(task.task.requirements.map((requirement) => [requirement.id, result.handoffs.filter((h) => h.to === responsibleWorker(run.arm, requirement)).map(artifactFromHandoff)]));
