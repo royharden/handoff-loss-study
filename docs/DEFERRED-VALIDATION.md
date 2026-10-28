@@ -1,5 +1,11 @@
 # Deferred validation
 
+> **Current owner stand-down:** No Docker or installs now. The earlier Round 2 exception is
+> historical authorization for checks already completed, not permission to resume them. Integration
+> reruns finished successfully. Stop after this documentation checkpoint; Roy will relaunch when RAM
+> is free. Dirty Mode is not implicitly closed. All commands below are later-only and require a fresh
+> explicit validation grant before execution. Spend: **USD 0 of 40**.
+
 ## Current Round 2 execution overlay — 2026-10-27
 
 The owner-authorized Round 2 exception permits the scoped local checks below while Dirty Mode remains
@@ -172,3 +178,141 @@ regressions narrowly replace the public-pair parser with a metadata-only stub an
 content or gold labels; they test custody, not semantic conformance. New matcher editions need new
 custodian-authored sealed digests. Actual state provisioning, real loader authentication, filesystem
 durability/concurrency and custodian G-I evaluation remain deferred. No test has executed.
+
+
+## Later-only install and Docker runbook (owner stand-down)
+
+Do not execute this section during the current stopped seat. A relaunch alone does not invent keys,
+rights, custody, image availability or a live-run approval. Roy must authorize the applicable validation
+phase. Keep prior artifacts and journals; do not rerun a consumed sealed/T2 edition. No command below
+starts a live model call.
+
+### 1. Preflight and clean dependency verification
+
+From the inner product repository in PowerShell, after Roy's fresh grant:
+
+```powershell
+$repo = (Resolve-Path -LiteralPath '.').Path
+$outer = (Resolve-Path -LiteralPath '..').Path
+function Assert-FreeRam {
+    $freeKiB = (Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory
+    if ($freeKiB -le (3 * 1MB)) { throw 'Need more than 3 GiB free RAM; stop and record.' }
+}
+git status --porcelain
+# Stop if there are unexplained changes; preserve them, never reset or delete them.
+Assert-FreeRam
+if (Test-Path -LiteralPath '.npmrc') { throw 'Do not read project credential/config files automatically.' }
+npm ci --ignore-scripts --offline --no-audit --no-fund `
+  --cache '../agentops/npm-cache' `
+  --userconfig '../agentops/npm-empty-user.config' `
+  --globalconfig '../agentops/npm-empty-global.config' `
+  --registry 'https://registry.npmjs.org'
+if ($LASTEXITCODE -ne 0) { throw 'Install failed; preserve log and stop.' }
+npm run typecheck
+if ($LASTEXITCODE -ne 0) { throw 'Typecheck failed; stop.' }
+npm run lint
+if ($LASTEXITCODE -ne 0) { throw 'Lint failed; stop.' }
+npm test
+if ($LASTEXITCODE -ne 0) { throw 'Tests failed; stop.' }
+npm run build:viewer
+if ($LASTEXITCODE -ne 0) { throw 'Viewer build failed; stop.' }
+```
+
+The app-local cache and two deliberately empty npm config files exist in this workspace's outer
+`agentops/`. If moved to another machine, create new EMPTY config files there; never copy credentials.
+If offline cache material is absent, stop. Removing `--offline` for a standard-package download needs
+Roy's fresh install/network permission; it does not authorize accounts, paid calls or image pulls.
+The clean offline install and checks above already passed in the completed run; do not repeat them
+merely to fill time. Repeat only for changed source, a fresh environment or requested validation.
+
+### 2. Register the actual Docker owner and inspect available images
+
+Before ANY Docker resource, load the project's canonical agent-ports skill. Set `$ports` to its existing
+`scripts/ports.py` path from the workspace instructions; do not install another copy. Replace the three
+documentation placeholders with the actual ledger values, not guessed identities:
+
+```powershell
+$project = '<PLACEHOLDER_AGENT_PORTS_PROJECT>'
+$instance = '<PLACEHOLDER_AGENT_PORTS_INSTANCE>'
+$owner = '<PLACEHOLDER_AGENT_PORTS_OWNER>'
+if (@($project,$instance,$owner) | Where-Object { $_ -like '*PLACEHOLDER*' }) {
+    throw 'Replace documentation placeholders with actual authorized ledger values first.'
+}
+python "$ports" project show "$project"
+# If no project is registered, stop for authorized ledger registration; do not invent a block.
+python "$ports" claim --project "$project" --instance "$instance" --kind verify `
+  --services sandbox --owner "$owner"
+python "$ports" check "$project/$instance"
+if ($LASTEXITCODE -ne 0) { throw 'Ownership/resource state not verified; stop.' }
+Assert-FreeRam
+docker image inspect node:22.21.0-bookworm-slim
+if ($LASTEXITCODE -ne 0) { throw 'Declared base image missing; no pull is authorized.' }
+```
+
+Current observation: the declared base and three study images are absent locally. Docker was never
+started by this seat. No `docker pull`, registry push, daemon/WSL restart or unrelated cleanup is
+included here. Use only actual ledger labels and owned resources. No host port needs publishing.
+Protected databases/ports remain untouched.
+
+### 3. Build the three declared sandbox images only with explicit build/install permission
+
+These Dockerfiles run pinned npm installs. Their build-time package downloads require a fresh grant;
+`--pull=false` does not prevent an absent base from needing resolution, so the successful inspection
+above is mandatory. Use a new allowlisted context rather than sending the repository, `.git`,
+node_modules, result journals or any credential files to Docker:
+
+```powershell
+$contextParent = Join-Path $outer 'agentops/docker-contexts'
+New-Item -ItemType Directory -Path $contextParent -Force | Out-Null
+$context = Join-Path $contextParent ([guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path (Join-Path $context 'src/sandbox') -Force | Out-Null
+Copy-Item -LiteralPath (Join-Path $repo 'src/sandbox/grader') `
+  -Destination (Join-Path $context 'src/sandbox') -Recurse
+foreach ($role in @('candidate','grader','episode')) {
+    Assert-FreeRam
+    python "$ports" check "$project/$instance"
+    if ($LASTEXITCODE -ne 0) { throw 'Resource preflight failed.' }
+    docker build --pull=false --network=default `
+      --label "agentports.project=$project" --label "agentports.instance=$instance" `
+      --label "agentports.owner=$owner" `
+      --file (Join-Path $repo "docker/$role.Dockerfile") `
+      --tag "hls-s42-${role}:validation" "$context"
+    if ($LASTEXITCODE -ne 0) { throw "Build failed for $role; preserve context and log." }
+    docker image inspect "hls-s42-${role}:validation" `
+      --format '{{json .Id}} {{json .RepoDigests}}'
+}
+```
+
+`--network=default` is for the declared build-time package installation only, under the later grant.
+Actual study containers must remain `--network none`, non-root, read-only, without privileged mode,
+home/socket/credential mounts or extra capabilities. Preserve contexts; do not prune unrelated data.
+
+**Digest blocker:** `dockerArgs` requires an immutable `name@sha256:...` reference. Local builds may
+have an image config ID but no `RepoDigests`. A config ID is not automatically a registry manifest
+digest. Do not fabricate `name@<config-ID>`, push an image to obtain a digest, or call a digest test
+passed. If usable references are absent, stop for a reviewed local-image-ID contract change or
+owner-supplied compatible immutable images. Record the actual IDs/references before preregistration.
+
+### 4. Exercise Docker and later live gates honestly
+
+After images, ownership and the actual operator host are ready:
+
+```powershell
+npm run check:budget
+npm run check:containment
+```
+
+The current containment alias deliberately returns3 after its passing unit portion: it DOES NOT run
+D-class Docker attacks. There is no existing all-Docker test command to invent here. The next
+integrator must wire/review a harness using `DockerPairSandbox` and `DockerPublicTestPort`, actual
+`LiveActivationPort.agentPorts` and `authorizeContainers`, then execute the D-class rows above:
+traversal/symlink/hidden/credential/socket refusal, protocol noise/oversize/hang/exit, fork/memory
+abuse, candidate/grader separation, public tests, label ownership and cleanup. No model key is needed
+for authored adversarial fixtures. Prove worker-tree termination on timeout and Linux behavior;
+the completed host regression proves direct-child close only.
+
+`HLS_LIVE_ENABLED` stays unset/disabled. Actual live study activation additionally needs Roy-supplied
+`<PLACEHOLDER_API_KEY>`, an approved `<PLACEHOLDER_MODEL_PIN>`/price/budget scope, genuine gate and
+custody evidence, original rights confirmation, authenticated loaders, a stable outside-product state
+root and an actual trusted host. Ordinary CLI has no default live host. Do not initialize real state,
+freeze/open sealed material, or make T0/T1/T2 calls from this runbook without those separate grants.
