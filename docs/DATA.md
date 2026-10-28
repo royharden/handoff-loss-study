@@ -1,14 +1,16 @@
 # Data
 
-Completed for M3 (originality, licence, custody, G-A status). M6 adds the custodian disclosure and the
-owner spot-check record.
+Construction records for M3/M6; current status: **rights NOT confirmed; local-only use; Roy
+confirmation PENDING**. Independence remains **PENDING - Roy**. G-A/G-I/G-C have not passed.
 
 ## Sources and licence
 
-All task material is original synthetic TypeScript and prose written for this study and released under
-the MIT licence (see `LICENSE`). Published benchmarks (CooperBench, TeamBench, Handoff Debt, The Handoff
-Tax, MAST, ctxbench) are cited as design references only; nothing is copied, adapted or downloaded from
-them, and no third-party code, dataset or document was used to write the tasks.
+Builders declare the development tasks to be original synthetic TypeScript/prose written for this
+study. Those are builder declarations, not owner-confirmed rights. The existing MIT `LICENSE` and
+package metadata are retained as construction artifacts; no release or public license adoption is
+authorized. Published benchmarks (CooperBench, TeamBench, Handoff Debt, The Handoff Tax, MAST, ctxbench)
+are design references; the builder declaration is that no third-party task material was copied,
+adapted or downloaded.
 
 ### Originality declaration (builder, dev corpus)
 
@@ -33,8 +35,10 @@ the owner's confirmation required by G-A.
 | `heldout.manifest.json` | custodian | this repo (sha256 per held-out file), before the prereg freeze | everyone |
 | Blind labels on the 120-pair T1 sample (D19c) | independent custodian | outer shell, then committed after G-C | custodian until G-C |
 
-- The custodian is appointed by the owner and comes from a model family different from the builder's
-  and the worker model's (PLAN.md §6).
+- Round 2 permits an eligible non-builder delegated stand-in, disclosed as **delegated stand-in,
+  not human-independent**. No such seat is appointed by this document. Builder lineage (including
+  this INT, DLs and their children) is excluded. Human independence remains **PENDING - Roy**;
+  custody/model-family requirements must be reconciled with the frozen plan before activation.
 - Builder lineage never authors held-out data, expected answers, semantic labels or gold labels, and never
   reads `heldout-sealed\`.
 - Any integrity stop in T2 burns the held-out set (D25).
@@ -42,19 +46,33 @@ the owner's confirmation required by G-A.
 
 ## Gate G-A (data admission)
 
-**G-A: PENDING – needs Roy.** Open conditions:
+**G-A: PENDING for study activation; local dev admission checks PASS.** Open conditions:
 
 1. Two complete dev prototypes meeting gate conditions 1–8 **by execution** (oracle passes all 9 groups,
    untouched starter fails all 9, each mutant fails exactly its own group). T01 and T02 exist and meet the
-   pure-data conditions by reading (M3 static review); the execution checks are deferred
-   (`npm run validate:dev`, docs/DEFERRED-VALIDATION.md).
+   pure-data conditions by reading (M3 static review); the execution checks now PASS locally for all six dev tasks (current DEFERRED-VALIDATION.md overlay).
 2. Roy appoints the independent custodian (ROY-DECISIONS-REQUEST Q2).
 3. This file declares originality and licence: **done** for T01/T02 (above); T03–T06 in M6.
 4. Roy confirms rights and originality in writing (Q2).
 
-If G-A fails, S42 is skipped, not downgraded. No task is admitted and nothing executes before G-A.
+If G-A fails, S42 is skipped, not downgraded. Scoped keyless development validation is permitted under Round 2; it does not authorize a live study run or satisfy independent custody/rights.
 
 ## Development corpus completion — 2026-10-27
-T03 (refactor, parcel manifest), T04 (refactor, support ticket projection), T05 (feature, inventory transfer), T06 (bugfix, subscription credit statement) are original synthetic development tasks authored by 0910_Codex_gpt-61-sol_N20CodexInt42 under MIT. Each includes starter, spec/brief, builder-written dev expectations, oracle, eight isolated mutant overlays and two alternate solutions. Their schema, clause, anchor and C0 expectations are source-inspection claims only; no task has executed. These four tasks share a projection scaffold; generalization across wider software domains remains limited.
+T03 (refactor, parcel manifest), T04 (refactor, support ticket projection), T05 (feature, inventory transfer), T06 (bugfix, subscription credit statement) are original synthetic development tasks authored by 0910_Codex_gpt-61-sol_N20CodexInt42 with MIT recorded as their proposed construction license, still awaiting Roy rights confirmation. Each includes starter, spec/brief, builder-written dev expectations, oracle, eight isolated mutant overlays and two alternate solutions. Their schema, pure-data conditions, oracle/starter/mutant matrices, both alternates and public smoke tests now pass local execution checks; this does not confirm rights or independent semantics. These four tasks share a projection scaffold; generalization across wider software domains remains limited.
 
 Custodian appointment, rights confirmation and owner spot-checks are PENDING. Claude and Codex successor builders and their children are all builder lineage. No semantic/gold labels or held-out tasks have been authored by this construction team. See CUSTODIAN-PACKET.md for the three independent phases and heldout.schema.json for metadata shape. G-A/G-I/G-C remain unpassed.
+
+
+## Round 2 local validation overlay — 2026-10-27
+Scripts-disabled install and clean offline install, strict types/lint, 21 unit-test files /219 tests
+and viewer build pass. All six authored task matrices,12 alternates,18 public smoke variants and
+SYNTHETIC runner/store/verify/report pass. Detailed scopes and pending checks are in
+DEFERRED-VALIDATION.md. Public development hidden/ files remain builder-authored expectations,
+never independent held-out evidence. Rights NOT confirmed; local-only use; Roy confirmation PENDING.
+
+### Round 2 runtime update
+All six dev tasks pass local validator admission, with all12 alternates and18 public smoke variants
+passing. G-A condition1 (two executed prototypes) is met locally. Overall G-A/G-I/G-C remain pending
+independent custody/stand-in and rights confirmation, plus Docker/live prerequisites where required.
+Rights NOT confirmed; local-only use; Roy confirmation PENDING. Builders remain ineligible to supply
+sealed data or semantic/gold labels. No held-out material was authored or read.

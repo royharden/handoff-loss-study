@@ -155,3 +155,31 @@ M5-R2 source closure: cli/study.ts:329-332 constructs the actual existing LiveSt
 | M6-9 | M6 | README lists exactly what has and has not run | README.md:3-5,43-56,78-81; BOLT-HANDOFF.md:14-15,24,72; docs/DEFERRED-VALIDATION.md:1-6,45-58 (source/static checks only; runtime remains unverified) | pass | 0929_Codex_gpt-61-sol_Sub_S42M6Review |
 
 Separate Medium source review: **PASS for Dirty Mode construction; runtime unverified**. Reviewer is builder lineage, not independent custodian validation. Attributed parent syntax/source receipts are distinguished from this reviewer’s own hand traces. README milestone-table finalization remains the parent’s bounded integration step after the separate M2/M4/M5 reviews; no runtime or measured acceptance follows.
+
+
+## Round 2 historical correction — 2026-10-27
+The milestone rows above remain the original source-review records at their construction commits;
+line references and then-current "never run" claims are historical, not reverified against later
+fixes. Parent 0949 subsequently installed dependencies with scripts disabled and reports PASS for
+strict typecheck (round2-typecheck-r3.log), lint (round2-lint-r2.log), 19 unit-test files / 213 tests
+(round2-tests-r3.log), and viewer build (round2-viewer-build.log). Child
+0955_Codex_gpt-6_Sub_Round2Handoff inspected those log conclusions and corrected README, BOLT-HANDOFF,
+DATA and the DEFERRED-VALIDATION overlay; no source code or milestone verdict was changed by this
+documentation pass. Originals preserved outside the product repo under
+agentops/backups/round2/docs-0955/. Authored runtime validation remains in progress at this checkpoint;
+Docker, task admission, independent custody and live measurement remain unproved. These builder-lineage
+checks do not establish human independence or confirm rights. Rights NOT confirmed; local-only use;
+Roy confirmation and independence PENDING. Parent supplies any later authored-run delta.
+
+
+## Round 2 validation repairs
+Separate builder-lineage reviewer0960 passed the scoped parse/type/import fixes, Docker cleanup
+helper preservation, explicit authored hidden-test config and bounded workers, Windows OS-path
+allowlist, bounded owned-temp retry, direct-child close-before-timeout result and scratch lint scope.
+Actual execution is recorded in DEFERRED-VALIDATION.md. Source review is not custody independence or
+container/whole-process-tree proof. Source commits43ced1f, f5dd79d and f01a505; original failed receipts
+remain outside the product repo.
+
+Source80d8e33: reviewer0960 also passed required agent-ports identity and label propagation, the
+pre-state/pre-provider CLI guard and its explicit type-only assertion alias. Four pure argv tests
+cover label roles/refusals; actual ledger ownership and Docker runtime remain unverified.

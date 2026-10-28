@@ -96,3 +96,18 @@ Later cleanup evidence must include
 `docker ps -a --filter label=hls.app=handoff-loss-study --filter label=hls.owner=<run_id>`.
 No such validation is claimed here. Docker builds/install commands in Dockerfiles are deferred source,
 not evidence that any image/dependency is available.
+
+
+## Operator ledger identity (Round 2)
+The trusted host supplies `LiveActivationPort.agentPorts` with the actual agent-ports claim's
+`project`, `instance` and `owner`. Live dispatch validates the required non-placeholder identity
+before opening the stable journal or creating provider effects. Candidate, grader and public-test
+arguments include `agentports.project`, `agentports.instance`, `agentports.owner`, plus existing
+`hls.owner` / `hls.app` labels. Label validation is syntactic; `authorizeContainers` must still
+verify real consent, ledger registration and ownership before every start. No default identities
+are invented. Pure argv tests pass; no image, container isolation or cleanup claim follows.
+
+Local authored-only timeout validation confirms the direct spawned child has closed before returning
+a timeout result or cleaning its cwd; unconfirmed closure fails the operation. This does not prove
+termination of every Vitest descendant on timeout. Linux and full worker-tree timeout/cleanup remain
+unverified. Live model output never uses this host sandbox.

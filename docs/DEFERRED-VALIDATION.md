@@ -1,5 +1,53 @@
 # Deferred validation
 
+## Current Round 2 execution overlay — 2026-10-27
+
+The owner-authorized Round 2 exception permits the scoped local checks below while Dirty Mode remains
+active. These actual results supersede historical “never run” statements only in their stated scopes.
+No measured result, custody/rights sign-off, live activation, Docker isolation or publication follows.
+Operator logs, receipts and synthetic artifacts stay in the outer app shell's `agentops/`, outside Git.
+
+| Check / covered historical rows | Actual result | Outer receipt |
+|---|---|---|
+| Dependency resolution / DV-M1-01 | PASS: initial scripts-disabled install and clean `npm ci --ignore-scripts --offline` from app-local cache; RAM >6 GiB before clean install | round2-npm-ci.log; package-lock.json |
+| Strict types / DV-M1-02, DV-M2-10, DV-M4-01, M5-K1 type portions | PASS | round2-types-ownership-r2.log |
+| Lint / corresponding K lint portions | PASS; generated `.hls-tmp/` copies excluded like their original tasks/fixtures; product rules unchanged | round2-lint-ownership-r2.log |
+| Root unit suite / core, scorer, policies, budgets, store, journal, approvals, stats and metadata-custody units | PASS: 21 files / 219 tests. Unit metadata is not actual independent custody or real operator activation | round2-tests-ownership.log |
+| Viewer build / DV-M1-07, M5-K9 build portion | PASS; browser rendering/malicious-report browser checks remain unrun | round2-post-ci-build.log |
+| Keyless selftest, scripted fixtures, builder carry mechanics and visibility | PASS within CLI unit suite: selftest156/156, fixtures19/19, builder63 pairs plus identity checks. No semantic conformance claim | round2-tests-ownership.log |
+| Dev task execution / DV-M3-01/04/06/07/10; DV-M6-01/03; corresponding M2 pure/data/verbatim checks | PASS for T01–T06: each oracle passes9, untouched starter fails9, each mutant fails only its own group; all schema/pure conditions pass. This is local task admission, not full study G-A | round2-T01-validation.json through round2-T06-validation.json; round2-corpus-summary.json |
+| Alternate solutions / DV-M3-02, DV-M6-02 | PASS: all12 alternates pass9 groups; completed alias rerun after transient cleanup repair | round2-integration.log / round2-integration-receipt.json |
+| Authored public smoke tests / DV-M3-08 | PASS: all18 oracle/A1/A2 variants across T01–T06 | round2-public-smoke-receipt.json |
+| Executed positive/bad fixtures / DV-M2-04 | PASS: T80 accepted; c2 rejected on condition2 only; c3 rejected on condition3 only | round2-control-T80.json; round2-bad-c2.json; round2-bad-c3.json |
+| Local sandbox mechanics / DV-M2-05 | PASS on Windows for explicit hidden-file discovery, live/model-output refusal, digest refusal and direct-child timeout/owned-directory cleanup. Linux and real Vitest descendant-tree timeout cleanup are NOT proved | round2-local-boundaries.json; tests/local.test.ts; round2-tests-ownership.log |
+| SYNTHETIC runner/store/verify/report / DV-M6-04, DV-M4-09 normal mock journey, M5-K4/K6 | PASS: six cells plus null/oracle controls, eight stored journals with score recomputation and reports; null=0/oracle=1 controls. No model call | round2-integration-receipt.json; round2-results-demo/; round2-report/ |
+| Plan/help/live refusal / DV-M1-06 portions, M5-K7/K8 | PASS: dry plans6/90/216; maxUsd0/unverified prices; live refused before provider dispatch without approval. No live authorization inferred | round2-cli-receipt.json; round2-live-refusal.log |
+| Budget/containment aliases / DV-M4-03/04 unit portions | Budget alias PASS; containment returns expected3 with unit portion passed and Docker portion explicitly deferred | round2-post-ci-cli.json |
+| Docker D-class, candidate strict compilation inside images, attack/hang/cleanup/isolation | DEFERRED: required study images and declared base absent locally; no image pulls/builds/container starts performed | Local image inventory; SANDBOX.md |
+| Custodian conformance, G-A/G-I/G-C, actual operator state/host and T0/T1/T2 | PENDING: no eligible external stand-in, rights/independence unresolved, no key/model approval or live host. Unit state is synthetic test-only | No fabricated gates or appointments |
+
+Execution lineage: six dev matrices ran source43ced1f; completed alternates/mock/public/control checks
+ran sourcef5dd79d. The later f01a505 timeout-close ordering and scratch lint-scope repair passed source
+review, strict types/lint and all219 units. Normal-path grading criteria did not change. Original
+failed/cancelled runs and the EPERM failure remain in the outer records. Direct-child timeout checks
+do not prove termination of an entire Vitest fork tree; an unconfirmed termination fails the operation.
+Real cross-process operator-host recovery, authenticated consent/custody effects, malicious viewer
+browser checks and D/L checks remain deferred. No real operator authority or prereg was initialized. Source80d8e33 additionally requires actual
+agent-ports project/instance/owner labels before live state or provider effects; four pure argv
+regressions pass. These strings and label tests are not proof of a real ledger claim or Docker run.
+
+Access placeholders: `<PLACEHOLDER_API_KEY>` supplies future `ANTHROPIC_API_KEY` only after Roy supplies
+access; `<PLACEHOLDER_MODEL_PIN>` must match genuine prices, approvals and prereg. Documentation only;
+never execute the placeholders or inspect credential/.env files. USD40 hard app testing ceiling;
+USD0 spent. Rights NOT confirmed; local-only use; independence and Roy confirmation PENDING.
+
+## Historical construction backlog (preserved)
+
+The entries and "none run" statements below describe the original static-only construction phase.
+Use the current overlay above for executed checks; an unlisted or partially covered row remains
+pending. Existing deferred rows are preserved rather than rewritten as retroactive passes.
+
+
 Every check that needs execution (install, type-check, lint, tests, builds, containers, live calls) and
 therefore could not run during Dirty Mode construction. **None of these has run; none is reported as
 passed.** Each later milestone appends its rows. Owner-question numbers (Q#) refer to the owner decision
