@@ -1,6 +1,7 @@
 import { ProviderCompletionSchema, sumUsage } from '../core/contracts';
 import type { ProviderCompleteArgs, ProviderCompletion, ProviderPort, Reservation, Usage } from '../core/contracts';
-import { BudgetMeter, BudgetStop } from '../runner/budget';
+import type { BudgetMeter } from '../runner/budget';
+import { BudgetStop } from '../runner/budget';
 
 export class ProviderAttemptError extends Error {
   readonly retryable: boolean;

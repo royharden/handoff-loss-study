@@ -45,6 +45,10 @@ describe('§4.1 normalizeText', () => {
   it('collapses spaces/tabs but keeps line breaks', () => {
     expect(normalizeText('a \t  b\r\nc')).toBe('a b\nc');
   });
+  it('keeps Unicode line terminators as clause boundaries', () => {
+    // Regression: literal U+2028/U+2029 in the source regex prevented TypeScript/esbuild parsing.
+    expect(normalizeText('a\u0085b\u2028c\u2029d\re')).toBe('a\nb\nc\nd\ne');
+  });
   it('is idempotent on the self-test carriers', () => {
     const s = 'Don\u2019t:\n- set `retryCeiling` to **13000**';
     expect(normalizeText(normalizeText(s))).toBe(normalizeText(s));

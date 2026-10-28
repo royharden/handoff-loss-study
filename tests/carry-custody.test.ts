@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import type * as ContractsModule from '../src/core/contracts';
+import type * as PreregModule from '../src/store/prereg';
 import { studyMain } from '../cli/study';
 import type { LiveActivationPort } from '../cli/study';
 import { sha256Hex } from '../src/core/hash';
@@ -12,13 +14,13 @@ import { initializeLiveState } from '../src/store/live-state';
 // The public parser is narrowly replaced with a metadata parser: these are not carry-conformance
 // pairs, expected answers or semantic labels. Real conformance still requires independent custodian data.
 vi.mock('../src/core/contracts', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../src/core/contracts')>();
+  const actual = await importOriginal<typeof ContractsModule>();
   const { z } = await import('zod');
   return { ...actual, CarryPairSchema: z.object({ id: z.string(), set: z.literal('custodian_public') }).strict() };
 });
 const pins = vi.hoisted(() => ({ matcher: 'a'.repeat(64) }));
 vi.mock('../src/store/prereg', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../src/store/prereg')>();
+  const actual = await importOriginal<typeof PreregModule>();
   return { ...actual, sourceHash: () => pins.matcher };
 });
 

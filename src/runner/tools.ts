@@ -21,10 +21,11 @@ export const TOOL_SPECS: readonly ToolSpec[] = [
 ];
 export interface ToolOutcome { segments: RequestSegment[]; outcome: 'ok' | 'error' | 'refused'; handoff?: string; finish?: boolean; refusal?: PathRefusal; }
 function fields(call: ToolCall, allowed: readonly string[], required: readonly string[] = []): Record<string, JsonValue> {
-  if (call.input === null || Array.isArray(call.input) || typeof call.input !== 'object') throw new Error('tool input must be object');
-  if (Object.keys(call.input).some((k) => !allowed.includes(k))) throw new Error('unexpected tool field');
-  if (required.some((k) => typeof call.input[k] !== 'string')) throw new Error('required string absent');
-  return call.input;
+  const input = call.input;
+  if (input === null || Array.isArray(input) || typeof input !== 'object') throw new Error('tool input must be object');
+  if (Object.keys(input).some((k) => !allowed.includes(k))) throw new Error('unexpected tool field');
+  if (required.some((k) => typeof input[k] !== 'string')) throw new Error('required string absent');
+  return input;
 }
 export function toolsFor(policy: WorkerPolicy): readonly ToolSpec[] { return TOOL_SPECS.filter((t) => (t.name !== 'submit_handoff' || policy.canHandoff) && (t.name !== 'run_public_tests' || policy.canTest) && (!['write_file', 'edit_file'].includes(t.name) || policy.workspace.writable.size > 0)); }
 export async function executeTool(policy: WorkerPolicy, call: ToolCall, tests: PublicTestPort | undefined, signal: AbortSignal): Promise<ToolOutcome> {

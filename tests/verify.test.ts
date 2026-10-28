@@ -29,7 +29,9 @@ describe('M5 score recomputation', () => {
       const payloads = decodeChain(readFileSync(path, 'utf8')).map((r) => r.payload);
       const footer = payloads.at(-1) as { record: { requirements: { class: string }[] } };
       const first = footer.record.requirements[0]; if (first === undefined) throw new Error('fixture missing requirement');
-      first.class = 'kept';
+      // Keep the forged record schema-valid so this reaches score recomputation, not schema rejection.
+      first.class = 'local_not_done';
+      expect(() => RunRecordSchema.parse(footer.record)).not.toThrow();
       writeFileSync(path, encodeChain(payloads));
       writeFileSync(join(dir, 'events.jsonl.gz'), gzipSync(encodeChain(payloads)));
       expect(() => verifyRun(dir)).toThrow(/recomputation/);

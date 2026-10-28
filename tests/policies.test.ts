@@ -22,7 +22,8 @@ it('stops dispatch and grading after public-test cleanup integrity failure, burn
   const task = loadTask('tasks/dev/T01');
   for (const tranche of ['DEMO', 'T2'] as const) {
     const model = 'in-process-regression';
-    const first = mockStepsForArm('single')[0]!;
+    const first = mockStepsForArm('single')[0];
+    if (first === undefined) throw new Error('missing mock step');
     const calls: ToolCall[] = [
       { id: 'before', name: 'write_file', input: { path: task.task.modules.A.path, text: 'before cleanup failure' } },
       { id: 'test', name: 'run_public_tests', input: {} },

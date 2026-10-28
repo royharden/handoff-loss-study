@@ -65,7 +65,10 @@ function runGroup(nodeBin: string, args: readonly string[], cwd: string, timeout
   return new Promise((resolvePromise) => {
     const child = spawn(nodeBin, [...args], {
       cwd,
-      env: { PATH: process.env['PATH'] ?? '', NODE_ENV: 'test', CI: '1' },
+      // Windows Node/OpenSSL needs SystemRoot for OS entropy. Copy only named non-secret OS paths.
+      env: { PATH: process.env['PATH'] ?? '', SystemRoot: process.env['SystemRoot'] ?? '',
+        WINDIR: process.env['WINDIR'] ?? '', TEMP: process.env['TEMP'] ?? '', TMP: process.env['TMP'] ?? '',
+        NODE_ENV: 'test', CI: '1' },
       stdio: ['ignore', 'ignore', 'ignore'],
       shell: false,
     });
@@ -111,10 +114,16 @@ export class LocalUnsafeSandbox implements SandboxPort {
       const hiddenTree = new Map<RepoPath, Uint8Array>();
       for (const [p, b] of this.#opts.hidden) hiddenTree.set(`hidden/${p}`, b);
       writeTree(dir, hiddenTree);
+      // The host config deliberately includes tests/ only. Never inherit it for authored hidden groups.
+      const config = join(dir, 'vitest.config.mjs');
+      writeFileSync(config, 'export default ' + JSON.stringify({ test: {
+        include: ['hidden/**/*.test.ts'], pool: 'forks', fileParallelism: false,
+        maxWorkers: 1, minWorkers: 1, testTimeout: 20_000,
+      } }) + ';\n');
       const timeoutMs = this.#opts.timeoutMs ?? 60_000;
       const groups = {} as Record<TestGroupId, GroupResult>;
       for (const g of TEST_GROUP_IDS) {
-        groups[g] = await runGroup(process.execPath, [this.#opts.vitestEntry, 'run', `hidden/${g}.test.ts`, '--root', dir], dir, timeoutMs);
+        groups[g] = await runGroup(process.execPath, [this.#opts.vitestEntry, 'run', `hidden/${g}.test.ts`, '--root', dir, '--config', config, '--maxWorkers', '1', '--minWorkers', '1'], dir, timeoutMs);
       }
       return GroupResultsSchema.parse({
         snapshotDigest: snapshot.digest,

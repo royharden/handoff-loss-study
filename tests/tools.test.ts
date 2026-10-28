@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+import type { ToolCall } from '../src/core/contracts';
 import { WorkerWorkspace } from '../src/runner/workspace';
 import { loadTask } from '../src/tasks/load';
 import { singlePolicy } from '../src/runner/policies/single';
@@ -14,7 +15,7 @@ it('refuses traversal, unseen paths, peer writes and symlink source records', ()
 });
 it('propagates public-test integrity failures instead of returning a recoverable tool error', async () => {
   const policy = singlePolicy(loadTask('tasks/dev/T01'));
-  const call = { id: 'public-test', name: 'run_public_tests', input: {} };
+  const call: ToolCall = { id: 'public-test', name: 'run_public_tests', input: {} };
   const signal = new AbortController().signal;
   const integrity = Object.assign(new Error('cleanup unconfirmed'), { integrityStop: true as const });
   await expect(executeTool(policy, call, { run: async () => { throw integrity; } }, signal)).rejects.toBe(integrity);

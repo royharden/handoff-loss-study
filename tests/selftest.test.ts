@@ -28,8 +28,11 @@ describe('hls (keyless)', () => {
     expect(await main(['validate', fixture('bad-tasks')])).toBe(1);
     expect(await main(['validate', fixture('control-task/T80')])).toBe(3);
   });
-  it('unimplemented commands exit 2', async () => {
-    expect(await main(['run', '--live'])).toBe(2);
+  it('refuses live execution without approval before provider dispatch', async () => {
+    await expect(main(['run', '--live'])).rejects.toThrow('live refused: no approval');
+  });
+  it('unknown commands exit 2', async () => {
+    expect(await main(['not-a-command'])).toBe(2);
   });
   it('no network or provider SDK import on the keyless path (static check of the CLI and scorer sources)', () => {
     const files = ['../cli/hls.ts', '../src/score/fixture.ts', '../src/score/evidence.ts', '../src/providers/null.ts', '../src/providers/scripted.ts', '../src/providers/port.ts'];

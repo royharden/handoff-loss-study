@@ -1,6 +1,7 @@
 /** D17 implementation source. No container starts at import or construction. */
 import { spawn, execFile } from 'node:child_process';
 import type { ChildProcessWithoutNullStreams } from 'node:child_process';
+import type { Node } from 'typescript';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, chmodSync, rmSync } from 'node:fs';
 import { dirname, join, resolve, sep } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -53,6 +54,15 @@ async function cleanupOwned(name: string, owner: string): Promise<void> {
   if (!labels || typeof labels !== 'object' || (labels as Record<string, unknown>)['hls.owner'] !== owner || (labels as Record<string, unknown>)['hls.app'] !== 'handoff-loss-study') throw new SandboxIntegrityError('refusing cleanup: owner label mismatch');
   try { await docker(['rm', '-f', name]); } catch { throw new SandboxIntegrityError('owned container cleanup failed'); }
 }
+function cleanupRoot(root: string, workRoot: string, error: Error): void {
+  if (!root.startsWith(resolve(workRoot) + sep)) throw error;
+  rmSync(root, { recursive: true, force: true });
+}
+async function cleanupPair(names: readonly string[], owner: string, root: string, workRoot: string): Promise<void> {
+  const cleaned = await Promise.allSettled(names.map((name) => cleanupOwned(name, owner)));
+  if (cleaned.some((result) => result.status === 'rejected')) throw new SandboxIntegrityError('pair cleanup unconfirmed; tranche must stop');
+  cleanupRoot(root, workRoot, new SandboxIntegrityError('cleanup root escape'));
+}
 function writeTree(root: string, tree: FileTree): void {
   for (const [path, bytes] of tree) {
     if (!path || path.includes('\\') || path.includes(':') || path.split('/').some((p) => p === '.' || p === '..' || p === '')) throw new Error('unsafe snapshot path');
@@ -68,7 +78,7 @@ export async function staticCandidateChecks(snapshot: SourceSnapshot, config: St
     if (!path.endsWith('.ts')) continue;
     const source = ts.createSourceFile(path, new TextDecoder().decode(bytes), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     let bad = false;
-    const visit = (node: import('typescript').Node): void => { if (ts.isIdentifier(node) && forbidden.has(node.text)) bad = true; ts.forEachChild(node, visit); };
+    const visit = (node: Node): void => { if (ts.isIdentifier(node) && forbidden.has(node.text)) bad = true; ts.forEachChild(node, visit); };
     visit(source); if (bad) return { protectedChanged, forbiddenIdentifier: true };
   }
   return { protectedChanged, forbiddenIdentifier: false };
@@ -114,7 +124,10 @@ export class DockerPairSandbox implements SandboxPort {
           if (relay.failure === null) { const raw: unknown = JSON.parse(readFileSync(join(results, 'result.json'), 'utf8')); if (raw && typeof raw === 'object') { const record = raw as Record<string, unknown>; if (record['group'] === group && typeof record['passed'] === 'boolean' && (record['failure'] === null || record['failure'] === 'assertion' || record['failure'] === 'grader_error')) verdict = { passed: record['passed'], failure: record['failure'] as GroupResult['failure'], durationMs: Date.now() - started }; } }
           groups[group] = verdict;
         } catch { groups[group] = { passed: false, failure: 'grader_error', durationMs: Date.now() - started }; }
-        finally { candidate?.kill(); grader?.kill(); const cleaned = await Promise.allSettled([cleanupOwned(candidateName, o.ownerRunId), cleanupOwned(graderName, o.ownerRunId)]); if (cleaned.some((r) => r.status === 'rejected')) throw new SandboxIntegrityError('pair cleanup unconfirmed; tranche must stop'); if (!root.startsWith(resolve(o.workRoot) + sep)) throw new SandboxIntegrityError('cleanup root escape'); rmSync(root, { recursive: true, force: true }); }
+        finally {
+          candidate?.kill(); grader?.kill();
+          await cleanupPair([candidateName, graderName], o.ownerRunId, root, o.workRoot);
+        }
       }
     }
     return GroupResultsSchema.parse({ snapshotDigest: snapshot.digest, hiddenBundleDigest, graderImageDigest: o.graderImage.slice(o.graderImage.indexOf('@') + 1), sandbox: this.kind, groups });
@@ -150,6 +163,9 @@ export class DockerPublicTestPort implements PublicTestPort {
       const r = parsed as Record<string, unknown>;
       if (typeof r['passed'] !== 'boolean' || !Number.isInteger(r['total']) || !Number.isInteger(r['failed'])) throw new Error('public result malformed');
       return [{ text: JSON.stringify({ passed: r['passed'], total: r['total'], failed: r['failed'] }), path: null, ownSource: false }];
-    } finally { await cleanupOwned(name, o.ownerRunId); if (!root.startsWith(resolve(o.workRoot) + sep)) throw new Error('public cleanup root escape'); rmSync(root, { recursive: true, force: true }); }
+    } finally {
+      await cleanupOwned(name, o.ownerRunId);
+      cleanupRoot(root, o.workRoot, new Error('public cleanup root escape'));
+    }
   }
 }

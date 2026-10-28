@@ -72,8 +72,7 @@ describe('trusted-CLI protected-file check (D17, static.json)', () => {
   });
   it('fails the do_not_touch group with static_check when the protected file changed', () => {
     const tree = new Map(t.repo);
-    tree.set('src/contracts.ts', new TextEncoder().encode('// edited
-'));
+    tree.set('src/contracts.ts', new TextEncoder().encode('// edited\n'));
     const r = applyProtectedFileCheck(t, tree, results([]));
     expect(r.groups.R7).toEqual({ passed: false, failure: 'static_check', durationMs: 1 });
     expect(r.groups.R1.passed).toBe(true);

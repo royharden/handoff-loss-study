@@ -30,7 +30,7 @@ export function isWordChar(ch: string | undefined): boolean {
   return ch !== undefined && WORD_CHAR.test(ch);
 }
 
-const LINE_BREAKS = /\r\n|\r|\u0085| | /g;
+const LINE_BREAKS = /\r\n|\r|\u0085|\u2028|\u2029/g;
 const SINGLE_QUOTES = /[‘’‛′]/g;
 const DOUBLE_QUOTES = /[“”″]/g;
 const BACKTICKS = /`/g;
