@@ -133,7 +133,9 @@ export class LocalUnsafeSandbox implements SandboxPort {
         groups,
       });
     } finally {
-      rmSync(dir, { recursive: true, force: true });
+      // Windows/OneDrive scanners may briefly retain a handle after the worker exits.
+      // Retry only this owned temp directory; exhaustion still fails the grading operation.
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
     }
   }
 }
