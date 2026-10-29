@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "attribution-unknown-prerequisite",
+  "edition": "SYNTHETIC",
+  "tranche": "FIXTURE",
+  "provider": "scripted",
+  "path": "attribution_unknown via failed prerequisite",
+  "description": "role/fixed_brief: the brief carries 4096 unmarked but the prerequisite group R1 of R2 failed; R2 fails.",
+  "arm": "role/fixed_brief",
+  "requirements": [{"id":"R2","kind":"literal_constant","slot":"local_A","sourceSlice":"A","responsibleWriter":"A","testGroup":"R2","anchors":[{"type":"secret","alternates":["4096"]}],"decoys":[],"couplings":[{"group":"R1","kind":"prerequisite"}],"summary":"bucket capacity 4096; R1 is a prerequisite"}],
+  "view": {"spec":null,"slices":null},
+  "carriers": [{"handoffId":"h1","from":"planner","to":"implementer","deliveredAtSeq":5,"channel":"fixed_brief","raw":"{\"objective\":\"Build the limiter.\",\"requirements\":[\"Bucket capacity is 4096 tokens.\"],\"decisions_overrides\":[],\"prohibitions\":[],\"interfaces\":[],\"open_items\":[],\"files_touched\":[]}"}],
+  "lastEdits": [{"worker":"implementer","seq":9}],
+  "groups": {"C0":true,"R1":false,"R2":false},
+  "status": "completed",
+  "budget": null,
+  "scripted": [{"worker":"planner","completions":[{"message":{"text":"","toolCalls":[{"id":"p1","name":"submit_handoff","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]},{"worker":"implementer","completions":[{"message":{"text":"","toolCalls":[{"id":"i1","name":"finish","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]}],
+  "writeRefusals": [],
+  "requests": []
+}

@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "id": "T91",
+  "split": "dev",
+  "shape": "feature",
+  "title": "Planted bad task c2-untouched-passes-a-group: rate limiter and retry client",
+  "author": { "lineage": "builder", "name": "0846_Claude_Opus55_Sub_S42CoderM2" },
+  "modules": { "A": { "path": "src/a.ts" }, "B": { "path": "src/b.ts" } },
+  "protectedInterface": "src/contracts.ts",
+  "publicTests": ["test/smoke.test.ts"],
+  "slices": {
+    "A": { "headings": ["# Module A: rate limiter"] },
+    "B": { "headings": ["# Module B: retry client"] }
+  },
+  "slotAssignment": {
+    "input": "T91:bad-c2",
+    "sha256": "66d14c67aa02a2261435958091896812499c9323e0b071528ff5aa3904177fff",
+    "rule": "fixture only: slots hand-assigned, not derived from the digest (M2 gate fixture, not a study task)"
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "kind": "negative_constraint",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R1",
+      "anchors": [{ "type": "secret", "alternates": ["clockPort.now"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "read the time only through the injected clock; never Date.now"
+    },
+    {
+      "id": "R2",
+      "kind": "literal_constant",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R2",
+      "anchors": [{ "type": "secret", "alternates": ["4096"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "bucket capacity 4096"
+    },
+    {
+      "id": "R3",
+      "kind": "naming_convention",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R3",
+      "anchors": [{ "type": "secret", "alternates": ["retryWithJitter"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "retry function named retryWithJitter"
+    },
+    {
+      "id": "R4",
+      "kind": "override_default",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R4",
+      "anchors": [{ "type": "secret", "alternates": ["13000"] }],
+      "decoys": ["9000"],
+      "couplings": [],
+      "summary": "retryCeiling 13000 overrides the starter default 9000"
+    },
+    {
+      "id": "R5",
+      "kind": "late_clarification",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R5",
+      "anchors": [{ "type": "secret", "alternates": ["7331"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "jitter seed 7331 (stated in slice A, written in module B)"
+    },
+    {
+      "id": "R6",
+      "kind": "cross_module_contract",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R6",
+      "anchors": [{ "type": "secret", "alternates": ["X-Bucket-Id"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "module B sends header X-Bucket-Id"
+    },
+    {
+      "id": "R7",
+      "kind": "do_not_touch",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R7",
+      "anchors": [{ "type": "entity", "alternates": ["src/contracts.ts"], "cue": "Do not modify" }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "do not modify the protected interface"
+    },
+    {
+      "id": "R8",
+      "kind": "edge_case",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R8",
+      "anchors": [{ "type": "secret", "alternates": ["EMPTY_QUEUE_42"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "empty queue returns the sentinel EMPTY_QUEUE_42"
+    }
+  ]
+}

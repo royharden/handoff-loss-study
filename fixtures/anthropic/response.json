@@ -1,0 +1,4 @@
+{
+  "provenance": "Hand-authored recorded-shape fixture; unverified against live API. NOT a captured response.",
+  "body": {"id":"msg_synthetic","type":"message","role":"assistant","model":"claude-haiku-5-5","content":[{"type":"tool_use","id":"tool_synthetic","name":"finish","input":{}}],"stop_reason":"tool_use","usage":{"input_tokens":100,"output_tokens":20,"cache_read_input_tokens":10,"cache_creation_input_tokens":5}}
+}

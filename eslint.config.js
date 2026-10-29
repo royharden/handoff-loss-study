@@ -27,6 +27,17 @@ const NETWORK_AND_PROVIDER_MODULES = [
   'child_process',
 ];
 
+/** Subpath imports of the same modules (e.g. `@anthropic-ai/sdk/resources`): M1 review note 3. */
+const NETWORK_AND_PROVIDER_SUBPATHS = ['@anthropic-ai/sdk/*', 'openai/*', 'undici/*', 'axios/*', 'node-fetch/*'];
+
+/**
+ * The keyless selftest/demo path (PLAN.md §12 M2: "no network/provider import reachable from selftest/demo")
+ * may not import network or provider SDK modules. src/sandbox/local.ts (child_process) is not on that path:
+ * `hls validate --execute` loads it with a dynamic import.
+ */
+const KEYLESS_PATH_FILES = ['src/score/**/*.ts', 'src/tasks/**/*.ts', 'src/providers/port.ts', 'src/providers/null.ts', 'src/providers/scripted.ts', 'src/sandbox/port.ts', 'cli/hls.ts'];
+const NETWORK_AND_PROVIDER_ONLY = NETWORK_AND_PROVIDER_MODULES.filter((m) => !m.endsWith('child_process'));
+
 /** Erasable TypeScript only (PLAN.md §11): no enum, namespace or parameter properties. */
 const ERASABLE_ONLY = [
   { selector: 'TSEnumDeclaration', message: 'Use a zod enum or a union of string literals, not enum.' },
@@ -36,7 +47,7 @@ const ERASABLE_ONLY = [
 
 export default tseslint.config(
   {
-    ignores: ['node_modules/**', 'dist/**', 'viewer/dist/**', 'coverage/**', 'tasks/**', 'fixtures/**', 'results/**'],
+    ignores: ['.hls-tmp/**', 'node_modules/**', 'dist/**', 'viewer/dist/**', 'coverage/**', 'tasks/**', 'fixtures/**', 'results/**'],
   },
   js.configs.recommended,
   ...tseslint.configs.strict,
@@ -58,6 +69,7 @@ export default tseslint.config(
             name,
             message: 'src/core is pure: no network, process or provider SDK imports.',
           })),
+          patterns: [{ group: NETWORK_AND_PROVIDER_SUBPATHS, message: 'src/core is pure: no provider SDK or network subpath imports.' }],
         },
       ],
       'no-restricted-globals': [
@@ -65,6 +77,27 @@ export default tseslint.config(
         { name: 'fetch', message: 'src/core performs no network I/O.' },
         { name: 'WebSocket', message: 'src/core performs no network I/O.' },
         { name: 'XMLHttpRequest', message: 'src/core performs no network I/O.' },
+      ],
+    },
+  },
+  {
+    files: KEYLESS_PATH_FILES,
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: NETWORK_AND_PROVIDER_ONLY.map((name) => ({
+            name,
+            message: 'keyless selftest/demo path: no network or provider SDK imports (PLAN.md §12 M2).',
+          })),
+          patterns: [{ group: NETWORK_AND_PROVIDER_SUBPATHS, message: 'keyless selftest/demo path: no provider SDK or network subpath imports.' }],
+        },
+      ],
+      'no-restricted-globals': [
+        'error',
+        { name: 'fetch', message: 'keyless path performs no network I/O.' },
+        { name: 'WebSocket', message: 'keyless path performs no network I/O.' },
+        { name: 'XMLHttpRequest', message: 'keyless path performs no network I/O.' },
       ],
     },
   },

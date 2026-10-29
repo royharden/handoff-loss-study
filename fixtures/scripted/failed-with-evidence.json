@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "failed-with-evidence",
+  "edition": "SYNTHETIC",
+  "tranche": "FIXTURE",
+  "provider": "scripted",
+  "path": "failed_with_evidence",
+  "description": "role/fixed_brief (demo row 2): the brief carries 13000 unmarked, R5 still fails.",
+  "arm": "role/fixed_brief",
+  "requirements": [{"id":"R5","kind":"late_clarification","slot":"transfer_A_to_B","sourceSlice":"A","responsibleWriter":"B","testGroup":"R5","anchors":[{"type":"secret","alternates":["13000"]}],"decoys":["9000"],"couplings":[],"summary":"late clarification: retryCeiling 13000 replaces the starter default 9000"}],
+  "view": {"spec":null,"slices":null},
+  "carriers": [{"handoffId":"h1","from":"planner","to":"implementer","deliveredAtSeq":5,"channel":"fixed_brief","raw":"{\"objective\":\"Build the retry client.\",\"requirements\":[\"Set retryCeiling to 13000.\"],\"decisions_overrides\":[],\"prohibitions\":[],\"interfaces\":[],\"open_items\":[],\"files_touched\":[]}"}],
+  "lastEdits": [{"worker":"implementer","seq":9}],
+  "groups": {"C0":true,"R5":false},
+  "status": "completed",
+  "budget": null,
+  "scripted": [{"worker":"planner","completions":[{"message":{"text":"","toolCalls":[{"id":"p1","name":"submit_handoff","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]},{"worker":"implementer","completions":[{"message":{"text":"","toolCalls":[{"id":"i1","name":"finish","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]}],
+  "writeRefusals": [],
+  "requests": []
+}

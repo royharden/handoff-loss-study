@@ -1,0 +1,4 @@
+{
+  "provenance": "Hand-authored malformed-usage fixture; unverified against live API.",
+  "body": {"model":"claude-haiku-5-5","content":[{"type":"text","text":"SYNTHETIC"}],"stop_reason":"end_turn","usage":{}}
+}

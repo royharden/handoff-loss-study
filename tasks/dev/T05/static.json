@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "protectedFiles": [
+    {
+      "path": "src/inventory-contract.ts",
+      "sha256": "4c9d118aa5933b9e2a700b8007d79cce15a8879d4e48dde1b11e06d095ab6bdf"
+    }
+  ],
+  "forbiddenIdentifiers": [
+    {
+      "identifier": "eval",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "Function",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "process",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "require",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    },
+    {
+      "identifier": "globalThis",
+      "reason": "Pure task functions have no dynamic code or ambient process access."
+    }
+  ]
+}

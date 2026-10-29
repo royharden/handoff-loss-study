@@ -52,7 +52,11 @@ export const JsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
   z.union([
     z.null(),
     z.boolean(),
-    z.number().finite(),
+    // -0 is rejected here too, consistently with canonical JSON (src/core/canonical.ts; M1 review note 4).
+    z
+      .number()
+      .finite()
+      .refine((n) => !Object.is(n, -0), '-0 is not allowed (canonical JSON)'),
     z.string(),
     z.array(JsonValueSchema),
     z.record(z.string(), JsonValueSchema),

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "attribution-unknown-decoy",
+  "edition": "SYNTHETIC",
+  "tranche": "FIXTURE",
+  "provider": "scripted",
+  "path": "attribution_unknown via decoy",
+  "description": "context/fixed_brief (demo row 3): the brief from context_A names X-Bucket-Id in interfaces but also keeps the decoy X-Bucket-Key unmarked; R6 fails while C0 passes.",
+  "arm": "context/fixed_brief",
+  "requirements": [{"id":"R6","kind":"cross_module_contract","slot":"transfer_A_to_B","sourceSlice":"A","responsibleWriter":"B","testGroup":"R6","anchors":[{"type":"secret","alternates":["X-Bucket-Id"]}],"decoys":["X-Bucket-Key"],"couplings":[],"summary":"module B sends header X-Bucket-Id to module A"}],
+  "view": {"spec":null,"slices":null},
+  "carriers": [{"handoffId":"h1","from":"context_A","to":"context_B","deliveredAtSeq":4,"channel":"fixed_brief","raw":"{\"objective\":\"Module A limiter.\",\"requirements\":[],\"decisions_overrides\":[\"Keep the header X-Bucket-Key as the starter has it.\"],\"prohibitions\":[],\"interfaces\":[\"Module B sends the header X-Bucket-Id to module A.\"],\"open_items\":[],\"files_touched\":[]}"}],
+  "lastEdits": [{"worker":"context_A","seq":9},{"worker":"context_B","seq":9}],
+  "groups": {"C0":true,"R6":false},
+  "status": "completed",
+  "budget": null,
+  "scripted": [{"worker":"context_A","completions":[{"message":{"text":"","toolCalls":[{"id":"p1","name":"submit_handoff","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]},{"worker":"context_B","completions":[{"message":{"text":"","toolCalls":[{"id":"i1","name":"finish","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]}],
+  "writeRefusals": [],
+  "requests": []
+}

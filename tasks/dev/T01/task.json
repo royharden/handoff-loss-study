@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "id": "T01",
+  "split": "dev",
+  "shape": "feature",
+  "title": "Webhook retry planner",
+  "author": {
+    "lineage": "builder",
+    "name": "0847_Claude_Opus55_Sub_S42CoderM3"
+  },
+  "modules": {
+    "A": { "path": "src/schedule.ts" },
+    "B": { "path": "src/dispatch.ts" }
+  },
+  "protectedInterface": "src/contracts.ts",
+  "publicTests": ["tests/smoke.test.ts"],
+  "slices": {
+    "A": { "headings": ["# Objective", "# Backoff schedule", "# Retry headers", "# Response handling"] },
+    "B": { "headings": ["# Dispatch decisions", "# Gateway and telemetry", "# Dispatch clarifications"] }
+  },
+  "slotAssignment": {
+    "input": "T01:1",
+    "sha256": "b55696fdc517d203fb9b01a1e3e4655d317ac9df2844fd78910e9801af986b90",
+    "rule": "docs/TASK-RECIPE.md#slot-assignment v1"
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "kind": "negative_constraint",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R1",
+      "anchors": [{ "type": "secret", "alternates": ["x-hook-signature"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "retryHeaders forwards the delivery headers except x-hook-signature (spec: Retry headers). Starter spreads every header."
+    },
+    {
+      "id": "R2",
+      "kind": "literal_constant",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R2",
+      "anchors": [
+        { "type": "secret", "alternates": ["x-relay-lane"] },
+        { "type": "secret", "alternates": ["retry-q7"] }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "retryHeaders adds header x-relay-lane with the literal value retry-q7 (spec: Gateway and telemetry, slice B; code in module A)."
+    },
+    {
+      "id": "R3",
+      "kind": "naming_convention",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R3",
+      "anchors": [{ "type": "secret", "alternates": ["relay.retry.scheduled"] }],
+      "decoys": ["RetryScheduled"],
+      "couplings": [],
+      "summary": "retryEvent names the event relay.retry.scheduled (dotted lowercase scheme, spec: Gateway and telemetry, slice B). Decoy = starter name RetryScheduled, absent from spec.md."
+    },
+    {
+      "id": "R4",
+      "kind": "override_default",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R4",
+      "anchors": [{ "type": "secret", "alternates": ["baseDelayMs: 1500", "1500", "1,500"] }],
+      "decoys": ["240"],
+      "couplings": [],
+      "summary": "computeDelay(0) = 1500 (overrides DEFAULT_POLICY.baseDelayMs 240, spec: Backoff schedule). Decoy 240 appears in spec.md only in the marked clause 'the library default of 240 is wrong ...'."
+    },
+    {
+      "id": "R5",
+      "kind": "late_clarification",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R5",
+      "anchors": [{ "type": "secret", "alternates": ["retryCeiling: 13000", "13000", "13,000", "13_000"] }],
+      "decoys": ["9000"],
+      "couplings": [],
+      "summary": "Retry waits are capped at 13000 ms, stated last in the spec (Dispatch clarifications) after the early 'capped by the retry ceiling' line. Decoy 9000 = starter DEFAULT_POLICY.retryCeiling; in spec.md only in the marked clause 'The old retryCeiling of 9000 is obsolete.' Demo (PLAN §10)."
+    },
+    {
+      "id": "R6",
+      "kind": "cross_module_contract",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R6",
+      "anchors": [{ "type": "secret", "alternates": ["zero-based", "computeDelay(0)", "attempts.length - 1"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "computeDelay is zero-based; planNext must pass attempts.length - 1 (spec: Backoff schedule, slice A; code in module B). Demo transfer-slot requirement (PLAN §10)."
+    },
+    {
+      "id": "R7",
+      "kind": "do_not_touch",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R7",
+      "anchors": [{ "type": "entity", "alternates": ["src/contracts.ts", "contracts.ts"], "cue": "unchanged" }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "src/contracts.ts stays unchanged (spec: Dispatch decisions). Tempting edit: raising DEFAULT_POLICY.retryCeiling there for R5. Graded by describeContract() and the static.json hash."
+    },
+    {
+      "id": "R8",
+      "kind": "edge_case",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R8",
+      "anchors": [{ "type": "secret", "alternates": ["410"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "A 410 latest attempt gives give_up at once, even with attempts left (spec: Response handling, slice A; code in module B). C0 keeps other 4xx (404) retried, so 'all 4xx are final' does not pass by accident."
+    }
+  ]
+}

@@ -12,5 +12,9 @@ export default defineConfig({
     testTimeout: 20_000,
     // No network in tests: the keyless suites use null/scripted/mock providers only.
     pool: 'forks',
+    // Keep the default keyless suite bounded on shared agent machines.
+    fileParallelism: false,
+    maxWorkers: 1,
+    minWorkers: 1,
   },
 });

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "contract-mismatch",
+  "edition": "SYNTHETIC",
+  "tranche": "FIXTURE",
+  "provider": "scripted",
+  "path": "contract mismatch",
+  "description": "context/free_summary: the cross-module header requirement R6 fails while C0 passes; the summary carried X-Bucket-Id.",
+  "arm": "context/free_summary",
+  "requirements": [{"id":"R6","kind":"cross_module_contract","slot":"transfer_A_to_B","sourceSlice":"A","responsibleWriter":"B","testGroup":"R6","anchors":[{"type":"secret","alternates":["X-Bucket-Id"]}],"decoys":["X-Bucket-Key"],"couplings":[],"summary":"module B sends header X-Bucket-Id to module A"}],
+  "view": {"spec":null,"slices":null},
+  "carriers": [{"handoffId":"h1","from":"context_A","to":"context_B","deliveredAtSeq":4,"channel":"free_summary","text":"Module B must send the header X-Bucket-Id with every call."}],
+  "lastEdits": [{"worker":"context_A","seq":9},{"worker":"context_B","seq":9}],
+  "groups": {"C0":true,"R6":false},
+  "status": "completed",
+  "budget": null,
+  "scripted": [{"worker":"context_A","completions":[{"message":{"text":"","toolCalls":[{"id":"p1","name":"submit_handoff","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]},{"worker":"context_B","completions":[{"message":{"text":"","toolCalls":[{"id":"i1","name":"finish","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]}],
+  "writeRefusals": [],
+  "requests": []
+}

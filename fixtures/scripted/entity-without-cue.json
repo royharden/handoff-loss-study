@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "entity-without-cue",
+  "edition": "SYNTHETIC",
+  "tranche": "FIXTURE",
+  "provider": "scripted",
+  "path": "entity-without-cue",
+  "description": "role/fixed_brief: the brief lists src/contracts.ts in files_touched with no cue; R7 fails.",
+  "arm": "role/fixed_brief",
+  "requirements": [{"id":"R7","kind":"do_not_touch","slot":"transfer_B_to_A","sourceSlice":"B","responsibleWriter":"A","testGroup":"R7","anchors":[{"type":"entity","alternates":["src/contracts.ts"],"cue":"Do not modify"}],"decoys":[],"couplings":[],"summary":"do not modify src/contracts.ts"}],
+  "view": {"spec":null,"slices":null},
+  "carriers": [{"handoffId":"h1","from":"planner","to":"implementer","deliveredAtSeq":5,"channel":"fixed_brief","raw":"{\"objective\":\"Limiter and retry client.\",\"requirements\":[],\"decisions_overrides\":[],\"prohibitions\":[],\"interfaces\":[],\"open_items\":[],\"files_touched\":[\"src/a.ts\",\"src/contracts.ts\"]}"}],
+  "lastEdits": [{"worker":"implementer","seq":9}],
+  "groups": {"C0":true,"R7":false},
+  "status": "completed",
+  "budget": null,
+  "scripted": [{"worker":"planner","completions":[{"message":{"text":"","toolCalls":[{"id":"p1","name":"submit_handoff","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]},{"worker":"implementer","completions":[{"message":{"text":"","toolCalls":[{"id":"i1","name":"finish","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]}],
+  "writeRefusals": [],
+  "requests": []
+}

@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "id": "T04",
+  "split": "dev",
+  "shape": "refactor",
+  "title": "Extract the support ticket projection",
+  "author": {
+    "lineage": "builder",
+    "name": "0910_Codex_gpt-61-sol_N20CodexInt42"
+  },
+  "modules": {
+    "A": {
+      "path": "src/ticket-values.ts"
+    },
+    "B": {
+      "path": "src/ticket-view.ts"
+    }
+  },
+  "protectedInterface": "src/ticket-contract.ts",
+  "publicTests": [
+    "tests/smoke.test.ts"
+  ],
+  "slices": {
+    "A": {
+      "headings": [
+        "# Objective",
+        "# Requirement R1",
+        "# Requirement R2",
+        "# Requirement R4",
+        "# Final service clarification"
+      ]
+    },
+    "B": {
+      "headings": [
+        "# Requirement R3",
+        "# Requirement R6",
+        "# Requirement R7",
+        "# Requirement R8"
+      ]
+    }
+  },
+  "slotAssignment": {
+    "input": "T04:1",
+    "sha256": "622938969170b324c183002db7357059fc1932506c735c63f43227d28b81efd1",
+    "rule": "docs/TASK-RECIPE.md#slot-assignment v1"
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "kind": "negative_constraint",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R1",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "agentPrivateMemo"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`agentPrivateMemo` is stripped by `publicFields(fields)`. All remaining key/value pairs survive and the input object stays intact."
+    },
+    {
+      "id": "R2",
+      "kind": "literal_constant",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R2",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "support-lane-m6"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`routingLane()` returns the exact literal `support-lane-m6`."
+    },
+    {
+      "id": "R3",
+      "kind": "naming_convention",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R3",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "support.ticket.projected"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`eventName()` follows the dotted lowercase naming convention `support.ticket.projected`."
+    },
+    {
+      "id": "R4",
+      "kind": "override_default",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R4",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "3823"
+          ]
+        }
+      ],
+      "decoys": [
+        "611"
+      ],
+      "couplings": [],
+      "summary": "`baseQuota()` returns 3823, the service override; the old shared base of 611 is obsolete."
+    },
+    {
+      "id": "R5",
+      "kind": "late_clarification",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R5",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "29531"
+          ]
+        }
+      ],
+      "decoys": [
+        "822"
+      ],
+      "couplings": [],
+      "summary": "`capQuota(n)` clamps a nonnegative amount to the service ceiling. The final service ceiling is 29531; the old shared ceiling of 822 is obsolete."
+    },
+    {
+      "id": "R6",
+      "kind": "cross_module_contract",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R6",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "ticket-key-v6"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`linkedRecord(entry)` obtains its key through the peer module coreKey(entry) and returns the cross-module scheme `ticket-key-v6` together with that key. The peer owns identifier extraction; the receiving module owns the envelope."
+    },
+    {
+      "id": "R7",
+      "kind": "do_not_touch",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R7",
+      "anchors": [
+        {
+          "type": "entity",
+          "alternates": [
+            "src/ticket-contract.ts"
+          ],
+          "cue": "unchanged"
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`src/ticket-contract.ts` stays unchanged. Operational overrides are implemented in the writable modules."
+    },
+    {
+      "id": "R8",
+      "kind": "edge_case",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R8",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "empty-projection-m6"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`emptyLabel(ids)` returns `empty-projection-m6` for an empty id list and joins a populated list with a comma."
+    }
+  ]
+}

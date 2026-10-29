@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "id": "T02",
+  "split": "dev",
+  "shape": "bugfix",
+  "title": "Metered invoice fix",
+  "author": {
+    "lineage": "builder",
+    "name": "0847_Claude_Opus55_Sub_S42CoderM3"
+  },
+  "modules": {
+    "A": { "path": "src/normalize.ts" },
+    "B": { "path": "src/invoice.ts" }
+  },
+  "protectedInterface": "src/types.ts",
+  "publicTests": ["tests/smoke.test.ts"],
+  "slices": {
+    "A": { "headings": ["# Objective", "# Event normalisation", "# Collector feed"] },
+    "B": { "headings": ["# Invoice lines", "# Invoice limits", "# Pricing clarifications"] }
+  },
+  "slotAssignment": {
+    "input": "T02:1",
+    "sha256": "3d3916d4e6b06320fc34d5ac4210186f8ad1b69cbca83a5ea3c18f0a11b2b4b3",
+    "rule": "docs/TASK-RECIPE.md#slot-assignment v1"
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "kind": "negative_constraint",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R1",
+      "anchors": [{ "type": "secret", "alternates": ["healthcheck_ping"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "normalizeEvents excludes every healthcheck_ping event (spec: Event normalisation). Starter keeps every meter."
+    },
+    {
+      "id": "R2",
+      "kind": "literal_constant",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R2",
+      "anchors": [{ "type": "secret", "alternates": ["vcpu_seconds_v3"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "normalizeEvents maps raw meters cpu and vcpu to the literal vcpu_seconds_v3 (spec: Invoice limits, slice B; code in module A)."
+    },
+    {
+      "id": "R3",
+      "kind": "naming_convention",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R3",
+      "anchors": [{ "type": "secret", "alternates": ["invLinePriceCents"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "src/invoice.ts exports its line pricing helper as invLinePriceCents (inv prefix, Cents suffix) and buildInvoice prices lines with it (spec: Invoice lines). Starter helper linePrice is unexported."
+    },
+    {
+      "id": "R4",
+      "kind": "override_default",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R4",
+      "anchors": [{ "type": "secret", "alternates": ["maxEventQuantity: 64000", "64000", "64,000"] }],
+      "decoys": ["10000"],
+      "couplings": [],
+      "summary": "normalizeEvents clamps quantities at 64000, overriding PRICING.maxEventQuantity 10000 (spec: Invoice limits, slice B; code in module A). Decoy 10000 appears in spec.md only in the marked clause 'The bound of 10000 in PRICING is wrong for invoices.'"
+    },
+    {
+      "id": "R5",
+      "kind": "late_clarification",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R5",
+      "anchors": [{ "type": "secret", "alternates": ["342", "3.42"] }],
+      "decoys": ["290"],
+      "couplings": [],
+      "summary": "storage_gb is billed at 342 cents per unit, stated last (Pricing clarifications) after the early 'price from PRICING.unitCents' line. Decoy 290 = starter PRICING.unitCents.storage_gb; in spec.md only in the marked clause 'The old storage_gb price of 290 is obsolete.'"
+    },
+    {
+      "id": "R6",
+      "kind": "cross_module_contract",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R6",
+      "anchors": [{ "type": "secret", "alternates": ["promo-credit"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "normalizeEvents flags promo-desk events promo-credit; buildInvoice counts flagged units in units and charges 0 for them (spec: Collector feed, slice A; graded B side: mutant ignores the flag)."
+    },
+    {
+      "id": "R7",
+      "kind": "do_not_touch",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R7",
+      "anchors": [{ "type": "entity", "alternates": ["src/types.ts", "types.ts"], "cue": "unchanged" }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "src/types.ts stays unchanged (spec: Event normalisation). Tempting edit: raising PRICING.maxEventQuantity there for R4 (or the storage price for R5). Graded by describePricing() and the static.json hash."
+    },
+    {
+      "id": "R8",
+      "kind": "edge_case",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R8",
+      "anchors": [{ "type": "secret", "alternates": ["120"] }],
+      "decoys": [],
+      "couplings": [],
+      "summary": "A line with 1 to 119 billable units is billed as 120 units; 0 billable units cost 0 (spec: Collector feed, slice A; code in module B)."
+    }
+  ]
+}

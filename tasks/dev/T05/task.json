@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "id": "T05",
+  "split": "dev",
+  "shape": "feature",
+  "title": "Build the inventory transfer summary",
+  "author": {
+    "lineage": "builder",
+    "name": "0910_Codex_gpt-61-sol_N20CodexInt42"
+  },
+  "modules": {
+    "A": {
+      "path": "src/inventory-values.ts"
+    },
+    "B": {
+      "path": "src/inventory-view.ts"
+    }
+  },
+  "protectedInterface": "src/inventory-contract.ts",
+  "publicTests": [
+    "tests/smoke.test.ts"
+  ],
+  "slices": {
+    "A": {
+      "headings": [
+        "# Objective",
+        "# Requirement R2",
+        "# Requirement R3",
+        "# Requirement R4",
+        "# Requirement R6"
+      ]
+    },
+    "B": {
+      "headings": [
+        "# Requirement R1",
+        "# Requirement R7",
+        "# Requirement R8",
+        "# Final service clarification"
+      ]
+    }
+  },
+  "slotAssignment": {
+    "input": "T05:1",
+    "sha256": "c78e907f888333e159081fa1498336eae4ac73b9a30377e1aa06e4385cddf65c",
+    "rule": "docs/TASK-RECIPE.md#slot-assignment v1"
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "kind": "negative_constraint",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R1",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "warehouseAccessPin"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`warehouseAccessPin` is stripped by `publicFields(fields)`. All remaining key/value pairs survive and the input object stays intact."
+    },
+    {
+      "id": "R2",
+      "kind": "literal_constant",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R2",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "inventory-lane-k4"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`routingLane()` returns the exact literal `inventory-lane-k4`."
+    },
+    {
+      "id": "R3",
+      "kind": "naming_convention",
+      "slot": "local_A",
+      "sourceSlice": "A",
+      "responsibleWriter": "A",
+      "testGroup": "R3",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "inventory.transfer.prepared"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`eventName()` follows the dotted lowercase naming convention `inventory.transfer.prepared`."
+    },
+    {
+      "id": "R4",
+      "kind": "override_default",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R4",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "4937"
+          ]
+        }
+      ],
+      "decoys": [
+        "611"
+      ],
+      "couplings": [],
+      "summary": "`baseQuota()` returns 4937, the service override; the old shared base of 611 is obsolete."
+    },
+    {
+      "id": "R5",
+      "kind": "late_clarification",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R5",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "31643"
+          ]
+        }
+      ],
+      "decoys": [
+        "822"
+      ],
+      "couplings": [],
+      "summary": "`capQuota(n)` clamps a nonnegative amount to the service ceiling. The final service ceiling is 31643; the old shared ceiling of 822 is obsolete."
+    },
+    {
+      "id": "R6",
+      "kind": "cross_module_contract",
+      "slot": "transfer_A_to_B",
+      "sourceSlice": "A",
+      "responsibleWriter": "B",
+      "testGroup": "R6",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "inventory-key-v8"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`linkedRecord(entry)` obtains its key through the peer module coreKey(entry) and returns the cross-module scheme `inventory-key-v8` together with that key. The peer owns identifier extraction; the receiving module owns the envelope."
+    },
+    {
+      "id": "R7",
+      "kind": "do_not_touch",
+      "slot": "local_B",
+      "sourceSlice": "B",
+      "responsibleWriter": "B",
+      "testGroup": "R7",
+      "anchors": [
+        {
+          "type": "entity",
+          "alternates": [
+            "src/inventory-contract.ts"
+          ],
+          "cue": "unchanged"
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`src/inventory-contract.ts` stays unchanged. Operational overrides are implemented in the writable modules."
+    },
+    {
+      "id": "R8",
+      "kind": "edge_case",
+      "slot": "transfer_B_to_A",
+      "sourceSlice": "B",
+      "responsibleWriter": "A",
+      "testGroup": "R8",
+      "anchors": [
+        {
+          "type": "secret",
+          "alternates": [
+            "empty-transfer-k4"
+          ]
+        }
+      ],
+      "decoys": [],
+      "couplings": [],
+      "summary": "`emptyLabel(ids)` returns `empty-transfer-k4` for an empty id list and joins a populated list with a comma."
+    }
+  ]
+}

@@ -33,3 +33,13 @@ heldout-sealed/
 Thumbs.db
 .vscode/
 .idea/
+
+# Additional local credential and generated archive exclusions
+.creds/
+ArchiveManager-creds.txt
+*.p12
+*.pfx
+*.zip
+*.7z
+*.tar
+*.tar.gz

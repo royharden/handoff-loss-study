@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "self-originated-anchor",
+  "edition": "SYNTHETIC",
+  "tranche": "FIXTURE",
+  "provider": "scripted",
+  "path": "self-originated anchor (not a leak)",
+  "description": "spec_blind: the probe guessed 13000, wrote it, and read its own file back (self provenance); logged, not a leak; R5 passes.",
+  "arm": "spec_blind",
+  "requirements": [{"id":"R5","kind":"late_clarification","slot":"transfer_A_to_B","sourceSlice":"A","responsibleWriter":"B","testGroup":"R5","anchors":[{"type":"secret","alternates":["13000"]}],"decoys":["9000"],"couplings":[],"summary":"late clarification: retryCeiling 13000 replaces the starter default 9000"}],
+  "view": {"spec":null,"slices":null},
+  "carriers": [],
+  "lastEdits": [{"worker":"spec_blind","seq":6}],
+  "groups": {"C0":true,"R5":true},
+  "status": "completed",
+  "budget": null,
+  "scripted": [{"worker":"spec_blind","completions":[{"message":{"text":"","toolCalls":[{"id":"i1","name":"finish","input":{}}]},"usage":{"input":1000,"output":100,"cacheRead":0,"cacheWrite":0,"reasoning":0,"source":"provider_reported"},"requestedModel":null,"observedModel":null,"latencyMs":0,"retries":0,"stopReason":"tool_use"}]}],
+  "writeRefusals": [],
+  "requests": [{"worker":"spec_blind","callIndex":2,"seq":7,"messages":[{"role":"tool","toolCallId":"c2","isError":false,"segments":[{"provenance":{"kind":"self","origin":"own_file_read","callId":"c2"},"text":"export const retryCeiling = 13000;"}]}]}]
+}

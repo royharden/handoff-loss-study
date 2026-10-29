@@ -10,6 +10,7 @@ import { makeRunId } from '../src/core/ids';
 import {
   ApprovalSchema,
   EditionMixError,
+  JsonValueSchema,
   UsageSchema,
   assertSingleEdition,
   heldoutAllowance,
@@ -176,5 +177,13 @@ describe('core contracts (smoke)', () => {
     expect(ApprovalSchema.safeParse(base).success).toBe(true);
     expect(ApprovalSchema.safeParse({ ...base, approver: { ...base.approver, decisionRef: '' } }).success).toBe(false);
     expect(ApprovalSchema.safeParse({ ...base, expiresAt: base.issuedAt }).success).toBe(false);
+  });
+});
+
+describe('JsonValueSchema (M2: -0 rejected consistently with canonical JSON)', () => {
+  it('rejects -0 at any depth and accepts 0', () => {
+    expect(JsonValueSchema.safeParse(-0).success).toBe(false);
+    expect(JsonValueSchema.safeParse({ a: [1, -0] }).success).toBe(false);
+    expect(JsonValueSchema.safeParse({ a: [1, 0] }).success).toBe(true);
   });
 });

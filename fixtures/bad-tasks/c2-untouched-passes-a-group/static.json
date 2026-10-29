@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "protectedFiles": [
+    { "path": "src/contracts.ts", "sha256": "808e8d34c0bbfe69925f1948ee3bc4675c09fdd32a848537f810931cb4abb1b8" }
+  ],
+  "forbiddenIdentifiers": [
+    { "identifier": "Date.now", "reason": "R1: module A reads the time only through the injected clock" }
+  ]
+}
